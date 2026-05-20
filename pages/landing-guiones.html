@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOIR SCRIPTS - Guiones Sci-Fi Profesionales</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark: #0a0e27;
+            --darker: #05070f;
+            --accent: #00ff41;
+            --accent-alt: #ff006e;
+            --text: #e0e0e0;
+            --muted: #8b8b8b;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, #1a0033 50%, var(--dark) 100%);
+            color: var(--text);
+            font-family: 'Crimson Text', serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 2px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--accent-alt) 0%, transparent 70%);
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent-alt);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: var(--accent);
+            color: var(--darker);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 2px solid var(--accent);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            border-radius: 2px;
+            box-shadow: 0 0 20px var(--accent-alt);
+        }
+
+        .cta-button:hover {
+            background: var(--accent-alt);
+            border-color: var(--accent-alt);
+            box-shadow: 0 0 40px var(--accent-alt);
+            transform: scale(1.05);
+        }
+
+        /* PORTFOLIO */
+        .portfolio {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-alt);
+        }
+
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .script-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--accent);
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .script-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: left 0.5s, opacity 0.3s;
+        }
+
+        .script-card:hover {
+            box-shadow: 0 0 30px var(--accent), inset 0 0 30px rgba(0, 255, 65, 0.05);
+            transform: translateY(-5px);
+            border-color: var(--accent-alt);
+        }
+
+        .script-card:hover::before {
+            left: 100%;
+            opacity: 0.5;
+        }
+
+        .script-genre {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-alt);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .script-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .script-duration {
+            display: inline-block;
+            background: var(--accent-alt);
+            color: var(--darker);
+            padding: 0.3rem 0.8rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .script-desc {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .script-price {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent);
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        /* PRICING */
+        .pricing {
+            padding: 5rem 2rem;
+            background: rgba(255, 0, 110, 0.02);
+            border-top: 1px solid var(--accent-alt);
+            border-bottom: 1px solid var(--accent-alt);
+        }
+
+        .pricing-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .price-card {
+            background: rgba(0, 255, 65, 0.05);
+            border: 2px solid var(--accent);
+            padding: 2rem;
+            text-align: center;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .price-card:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .price-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .price-amount {
+            font-size: 2.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            color: var(--accent-alt);
+            margin-bottom: 1rem;
+        }
+
+        .price-features {
+            text-align: left;
+            margin: 2rem 0;
+            color: var(--muted);
+        }
+
+        .price-features li {
+            list-style: none;
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .price-features li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* CONTACT */
+        .contact {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-form {
+            max-width: 500px;
+            margin: 3rem auto;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 2rem;
+            border: 1px solid var(--accent);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--accent);
+            color: var(--text);
+            font-family: inherit;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--accent-alt);
+            border-color: var(--accent-alt);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: var(--darker);
+            border: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-alt);
+            box-shadow: 0 0 20px var(--accent-alt);
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--accent);
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* ANIMATIONS */
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px var(--accent-alt); }
+            50% { text-shadow: 0 0 20px var(--accent-alt); }
+        }
+
+        .glow {
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .script-card {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        .script-card:nth-child(1) { animation-delay: 0.1s; }
+        .script-card:nth-child(2) { animation-delay: 0.2s; }
+        .script-card:nth-child(3) { animation-delay: 0.3s; }
+        .script-card:nth-child(4) { animation-delay: 0.4s; }
+        .script-card:nth-child(5) { animation-delay: 0.5s; }
+        .script-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">⚡ NOIR</div>
+        <div class="tagline">Guiones Sci-Fi de Cine</div>
+    </header>
+
+    <section class="hero">
+        <h1>Historias que Cambian Realidades</h1>
+        <p>Guiones profesionales listos para producir. Formato screenplay. Calidad de cine.</p>
+        <a href="#contact" class="cta-button">Obtener Guión Ahora</a>
+    </section>
+
+    <section class="portfolio">
+        <h2 class="section-title">Portfolio de Guiones</h2>
+        
+        <div class="scripts-grid">
+            <!-- Cyberpunk -->
+            <div class="script-card">
+                <div class="script-genre">Cyberpunk</div>
+                <div class="script-title">Neon Nights</div>
+                <div class="script-duration">5 MINUTOS</div>
+                <p class="script-desc">Una hacker infiltra el corazón corporativo. La ciudad es su arma. El sistema, su enemigo.</p>
+                <div class="script-price">$250</div>
+            </div>
+
+            <!-- Space Opera -->
+            <div class="script-card">
+                <div class="script-genre">Space Opera</div>
+                <div class="script-title">The Meridian</div>
+                <div class="script-duration">10 MINUTOS</div>
+                <p class="script-desc">Batalla épica entre el imperio y la rebelión. Destino de civilizaciones en juego.</p>
+                <div class="script-price">$450</div>
+            </div>
+
+            <!-- Dystopian -->
+            <div class="script-card">
+                <div class="script-genre">Distópico</div>
+                <div class="script-title">Gray City</div>
+                <div class="script-duration">5 MINUTOS</div>
+                <p class="script-desc">Vigilancia total. Control absoluto. Una memoria prohibida cambia todo.</p>
+                <div class="script-price">$250</div>
+            </div>
+
+            <!-- Post-Human -->
+            <div class="script-card">
+                <div class="script-genre">Post-Humano</div>
+                <div class="script-title">Digital Ghosts</div>
+                <div class="script-duration">10 MINUTOS</div>
+                <p class="script-desc">Mentes subidas a la red. La eternidad digital. ¿Somos aún humanos?</p>
+                <div class="script-price">$450</div>
+            </div>
+
+            <!-- Alien Contact -->
+            <div class="script-card">
+                <div class="script-genre">Contacto Alien</div>
+                <div class="script-title">First Contact</div>
+                <div class="script-duration">5 MINUTOS</div>
+                <p class="script-desc">Ellos llegan. La humanidad debe elegir. Nada volverá a ser igual.</p>
+                <div class="script-price">$250</div>
+            </div>
+
+            <!-- Time Travel -->
+            <div class="script-card">
+                <div class="script-genre">Viajes en Tiempo</div>
+                <div class="script-title">Temporal Loop</div>
+                <div class="script-duration">10 MINUTOS</div>
+                <p class="script-desc">Un bucle infinito. El pasado cambia el futuro. El futuro crea el pasado.</p>
+                <div class="script-price">$450</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing">
+        <div class="pricing-container">
+            <h2 class="section-title">Opciones de Compra</h2>
+            
+            <div class="pricing-grid">
+                <div class="price-card">
+                    <div class="price-title">Individual</div>
+                    <div class="price-amount">$250</div>
+                    <ul class="price-features">
+                        <li>1 Guión profesional</li>
+                        <li>Formato screenplay</li>
+                        <li>Derechos de producción</li>
+                        <li>Soporte vía email</li>
+                    </ul>
+                </div>
+
+                <div class="price-card">
+                    <div class="price-title">Pack (3)</div>
+                    <div class="price-amount">$600</div>
+                    <ul class="price-features">
+                        <li>3 Guiones profesionales</li>
+                        <li>Géneros variados</li>
+                        <li>Derechos de producción</li>
+                        <li>Soporte prioritario</li>
+                    </ul>
+                </div>
+
+                <div class="price-card">
+                    <div class="price-title">Studio (6)</div>
+                    <div class="price-amount">$1,000</div>
+                    <ul class="price-features">
+                        <li>6 Guiones profesionales</li>
+                        <li>Todos los géneros</li>
+                        <li>Derechos exclusivos</li>
+                        <li>Consultoría incluida</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <h2 class="section-title">Contáctanos</h2>
+        <p>¿Necesitas algo diferente? Hablemos de tu proyecto.</p>
+        
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Proyecto</label>
+                <textarea name="message" required placeholder="Cuéntanos sobre tu proyecto..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Enviar Consulta</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>© 2026 NOIR SCRIPTS. Guiones Profesionales de Ciencia Ficción.</p>
+        <p>Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            // Para integración real: enviar a backend/email service
+            console.log('Consulta recibida:', {
+                nombre: formData.get('name'),
+                email: formData.get('email'),
+                mensaje: formData.get('message')
+            });
+            
+            alert('Consulta recibida. Te contactaremos pronto.');
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>

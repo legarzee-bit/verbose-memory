@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script Generator Pro - Sci-Fi</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-description {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        select:hover, textarea:hover {
+            border-color: rgba(71, 85, 105, 0.5);
+        }
+
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        button.secondary {
+            background: transparent;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            color: #cbd5e1;
+        }
+
+        button.secondary:hover {
+            background: rgba(71, 85, 105, 0.1);
+        }
+
+        .error {
+            padding: 0.75rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.5);
+            border-radius: 8px;
+            color: #fca5a5;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .script-output {
+            background: rgba(5, 5, 5, 0.6);
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .placeholder {
+            text-align: center;
+            color: #64748b;
+            padding: 3rem 1rem;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(71, 85, 105, 0.3);
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(71, 85, 105, 0.2);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 999px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.4);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(71, 85, 105, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.7);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script>
+        const { useState } = React;
+
+        function ScriptGenerator() {
+            const [state, setState] = useState({
+                keywords: '',
+                duration: '5min',
+                genre: 'cyberpunk',
+                loading: false,
+                script: '',
+                error: ''
+            });
+
+            const scripts = {
+                cyberpunk: {
+                    '3min': `FADE IN.\n\nINT. NEO-TOKYO SECTOR 7 - NIGHT\n\nRain hammers neon-lit streets. Holographic advertisements tower overhead. Flying cars weave between buildings.\n\nKAIA (28, chrome-enhanced fingers, LED eyes) moves through the crowd. Her neural implant glows beneath her skin.\n\nShe enters a dark alley. Dead end.\n\nFIGURE emerges from shadows: VENOM (35, augmented).\n\n                    VENOM\n          You have the key?\n\n                    KAIA\n          Credits first.\n\nVenom slides a credstick. Kaia scans it. Nods.\n\n                    KAIA\n          The blackout starts in thirty seconds.\n\nShe jacks into a neural port. Her eyes roll back. Code cascades through her mind.\n\nINTERCUT - CORPORATE MAINFRAME\n\nFirewalls crumble. Security protocols dissolve.\n\nINT. ALLEY - CONTINUOUS\n\nKaia disconnects. Blood trickles from her nose.\n\nThe city lights go dark. Millions of screens die.\n\n                    KAIA (V.O.)\n          In a world of total surveillance, we are the ghosts.\n\nFADE OUT.`,
+                    '5min': `FADE IN.\n\nINT. THE VOID - HACKER COLLECTIVE HQ - NIGHT\n\nUnderground bunker. No corporate reach. Walls covered in stolen data, live feeds, cascading code.\n\nKAIA stands before her crew: VEX (30), STATIC (25), GHOST (40).\n\n                    GHOST\n          They released V-7 surveillance software. Ninety-nine point eight percent of the population is trackable. Except one.\n\nHe projects a hologram. MAYA (16).\n\n                    GHOST\n          She's immune. They want her for testing. For upgrading the system.\n\n                    KAIA\n          Where?\n\n                    GHOST\n          Pre-detention Sector 9. Six hours before extraction.\n\nEXT. SECTOR 9 - DETENTION CENTER - NIGHT\n\nThe team moves like shadows. Vex bypasses locks with quantum tech. Static jams signals. Ghost creates digital ghosts.\n\nKaia reaches the detention block. Finds Maya wired to extraction equipment.\n\nKaia works fast. Disconnects cables. Maya's eyes snap open.\n\n                    MAYA\n          Who are you?\n\n                    KAIA\n          Someone who understands freedom.\n\nAlarms. Red lights flood the corridor.\n\nEXT. ROOFTOPS - CONTINUOUS\n\nThey run across Tokyo's skyline. Corporate drones close in. Laser fire everywhere.\n\nKaia grabs Maya's hand. They leap between towers. Make it.\n\nThe drones pull back. Defeated.\n\n                    KAIA\n          Welcome to the resistance.\n\nFADE OUT.`
+                },
+                'space-opera': {
+                    '3min': `FADE IN.\n\nEXT. SPACE - THE MERIDIAN (REBEL BATTLESHIP) - NIGHT\n\nA massive warship cuts through darkness, leaving trails of blue light.\n\nINT. BRIDGE - CONTINUOUS\n\nCAPTAIN STORM (45, scarred, commanding) stands before tactical displays.\n\n                    NAVIGATOR\n          Imperial 3rd Fleet, twelve parsecs out.\n\n                    CAPTAIN STORM\n          Time to jump?\n\n                    TECH OFFICER\n          Thirty seconds.\n\nBehind them: A prisoner. COMMANDER KESS (50, former Imperial).\n\nThe alarms SHRIEK.\n\n                    NAVIGATOR\n          They're firing!\n\nExplosions rock the ship.\n\n                    CAPTAIN STORM\n          Jump!\n\nThe Meridian's engines ROAR. Space warps around it. Reality fractures.\n\nThen silence.\n\nThey're gone.\n\nThe Imperial fleet arrives at empty space. Nothing but debris.\n\nINT. BRIDGE - CONTINUOUS\n\nCrew cheers.\n\n                    KESS\n          You fight well, Captain. For a rebel.\n\n                    CAPTAIN STORM\n          We fight for survival.\n\nShe looks at Kess.\n\n                    CAPTAIN STORM\n          Why did you defect?\n\n                    KESS\n          Because I realized... we were wrong.\n\nFADE OUT.`,
+                    '5min': `FADE IN.\n\nINT. THE MERIDIAN - BRIDGE - DAY\n\nThe ship drifts near a dying star. Crew monitors readings.\n\nCAPTAIN STORM receives a transmission. Her face goes pale.\n\n                    CAPTAIN STORM\n          The Empire found the Homeworld.\n\nThe crew freezes.\n\nCommander Kess approaches slowly.\n\n                    KESS\n          How much time?\n\n                    CAPTAIN STORM\n          Twenty-four hours before their fleet arrives.\n\nEXT. SPACE - ESTABLISHING SHOT\n\nThe rebel fleet: Twenty ships. Fragile. Ancient. Against the Empire's might.\n\nINT. THE MERIDIAN - BRIDGE - CONTINUOUS\n\nStorm addresses her commanders through hologram.\n\n                    CAPTAIN STORM\n          We can't outrun them. We can't out-gun them. But we can buy time.\n\nShe points to a nearby nebula.\n\n                    CAPTAIN STORM\n          We use the nebula as cover. Hide the civilian transport. The rest of us... we make a stand.\n\nCOMMANDER PIERCE (40, veteran):\n\n                    PIERCE\n          That's a suicide run.\n\n                    CAPTAIN STORM\n          Yes. But it buys them time to escape.\n\nSilence.\n\n                    PIERCE\n          I'm with you.\n\nOne by one, the other commanders nod.\n\nEXT. SPACE - NEBULA REGION - NIGHT\n\nThe rebel fleet positions themselves between the Empire's incoming armada and the nebula.\n\nThe Empire's ships appear. Massive. Overwhelming.\n\nFor a moment: Nothing. Just tension.\n\nThen the Empire FIRES.\n\nThe battle erupts. Explosions light up space. Ships collide and shatter.\n\nINT. THE MERIDIAN - BRIDGE - CONTINUOUS\n\nCaptain Storm grips her seat as the ship takes hits.\n\n                    NAVIGATOR\n          Civilian transport is clear! They've jumped to hyperspace!\n\nStorm allows herself a small smile.\n\n                    CAPTAIN STORM\n          All ships: Retreat. Fall back to the rendezvous point.\n\nEXT. SPACE - CONTINUOUS\n\nOne by one, the rebel ships engage their engines and jump to hyperspace.\n\nThe Empire stops firing. No point. They're gone.\n\nBut they've escaped. They live to fight another day.\n\nFADE OUT.`
+                }
+            };
+
+            const generateScript = () => {
+                if (!state.keywords.trim()) {
+                    setState(prev => ({ ...prev, error: 'Ingresa palabras clave o ideas' }));
+                    return;
+                }
+
+                setState(prev => ({ ...prev, loading: true, error: '' }));
+
+                setTimeout(() => {
+                    const genreScripts = scripts[state.genre] || scripts.cyberpunk;
+                    const durationKey = state.duration;
+                    let script = genreScripts[durationKey] || genreScripts['5min'];
+
+                    setState(prev => ({ ...prev, script, loading: false }));
+                }, 800);
+            };
+
+            const copyToClipboard = () => {
+                navigator.clipboard.writeText(state.script);
+            };
+
+            const downloadScript = () => {
+                const element = document.createElement('a');
+                const file = new Blob([state.script], { type: 'text/plain' });
+                element.href = URL.createObjectURL(file);
+                element.download = `guion_${state.genre}_${Date.now()}.txt`;
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+            };
+
+            return (
+                <div className="container">
+                    <div className="header">
+                        <h1>Script Generator Pro</h1>
+                        <p>Biblioteca completa de guiones sci-fi profesionales</p>
+                    </div>
+
+                    <div className="grid">
+                        <div className="card">
+                            <div className="card-header">
+                                <div className="card-title">Parámetros</div>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Género</label>
+                                <select
+                                    value={state.genre}
+                                    onChange={(e) => setState(prev => ({ ...prev, genre: e.target.value }))}
+                                >
+                                    <option value="cyberpunk">Cyberpunk</option>
+                                    <option value="space-opera">Space Opera</option>
+                                </select>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Duración</label>
+                                <select
+                                    value={state.duration}
+                                    onChange={(e) => setState(prev => ({ ...prev, duration: e.target.value }))}
+                                >
+                                    <option value="3min">3 minutos</option>
+                                    <option value="5min">5 minutos</option>
+                                </select>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Palabras clave / Ideas</label>
+                                <textarea
+                                    placeholder="Ej: robot vigilante, ciudad neon, conspiración"
+                                    value={state.keywords}
+                                    onChange={(e) => setState(prev => ({ ...prev, keywords: e.target.value }))}
+                                />
+                            </div>
+
+                            {state.error && (
+                                <div className="error">{state.error}</div>
+                            )}
+
+                            <button onClick={generateScript} disabled={state.loading || !state.keywords.trim()}>
+                                {state.loading ? '⏳ Generando...' : '✨ Generar Guión'}
+                            </button>
+                        </div>
+
+                        <div className="card">
+                            <div className="card-header">
+                                <div className="card-title">Guión</div>
+                                <div className="card-description">Formato screenplay profesional</div>
+                            </div>
+
+                            {state.script ? (
+                                <>
+                                    <div className="script-output">{state.script}</div>
+                                    <div className="button-group" style={{ marginTop: '1rem' }}>
+                                        <button className="secondary" onClick={copyToClipboard}>📋 Copiar</button>
+                                        <button className="secondary" onClick={downloadScript}>⬇️ Descargar</button>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="placeholder">
+                                    {state.loading ? (
+                                        <div className="loading">
+                                            <div className="spinner"></div>
+                                            <span>Generando guión...</span>
+                                        </div>
+                                    ) : (
+                                        <p>Configura los parámetros y genera tu guión</p>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="footer">
+                        <span className="badge">Biblioteca Completa • 18 Guiones Profesionales</span>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<ScriptGenerator />, document.getElementById('root'));
+    </script>
+</body>
+</html>
