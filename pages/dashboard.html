@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOIR - Panel de Usuario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @keyframes holo-bg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes holo-border {
+            0% { border-color: rgba(220,180,255,.8); }
+            50% { border-color: rgba(180,255,220,.8); }
+            100% { border-color: rgba(220,180,255,.8); }
+        }
+
+        @keyframes holo-text {
+            0% { color: #9966cc; }
+            50% { color: #66bb99; }
+            100% { color: #9966cc; }
+        }
+
+        body {
+            background: linear-gradient(120deg, #f4f0ff, #eef8ff, #eefff8, #fff0f8, #f8f0ff, #eef4ff, #f4f0ff);
+            background-size: 400% 400%;
+            animation: holo-bg 10s ease infinite;
+            min-height: 100vh;
+            padding: 2rem;
+            font-family: 'Crimson Text', serif;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid;
+            animation: holo-border 6s linear infinite;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            animation: holo-text 6s linear infinite;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-email {
+            font-size: .9rem;
+            color: #666;
+        }
+
+        .btn-logout {
+            padding: .6rem 1.2rem;
+            background: rgba(200,100,100,.7);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: .75rem;
+        }
+
+        .btn-logout:hover {
+            background: rgba(200,100,100,.9);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: linear-gradient(145deg, rgba(255,255,255,.88), rgba(248,242,255,.80));
+            border: 1.5px solid;
+            padding: 1.5rem;
+            border-radius: 16px;
+            animation: holo-border 6s linear infinite;
+            backdrop-filter: blur(20px);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            animation: holo-text 6s linear infinite;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .guion-item {
+            background: rgba(255,255,255,.6);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: .75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .guion-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .guion-date {
+            font-size: .8rem;
+            color: #999;
+        }
+
+        .btn-download {
+            padding: .4rem .8rem;
+            background: rgba(190,150,255,.6);
+            border: 1px solid rgba(190,150,255,.8);
+            color: #333;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: .75rem;
+            text-transform: uppercase;
+        }
+
+        .btn-download:hover {
+            background: rgba(190,150,255,.8);
+        }
+
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 2rem;
+        }
+
+        .btn-generate {
+            padding: .9rem;
+            background: linear-gradient(135deg, rgba(190,150,255,.85), rgba(150,190,255,.85));
+            color: rgba(50,30,70,.9);
+            border: 1.5px solid rgba(190,150,255,.6);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            border-radius: 10px;
+            transition: transform .2s;
+            width: 100%;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">⚡ NOIR Dashboard</div>
+        <div class="user-info">
+            <div class="user-email" id="user-email">usuario@email.com</div>
+            <button class="btn-logout" onclick="logoutUser()">Salir</button>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="card-title">📝 Mis Guiones</div>
+            <div id="guiones-list">
+                <div class="empty">Cargando...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">✨ Generar Nuevo</div>
+            <p style="margin-bottom:1.5rem;color:#666;font-size:.95rem">Accede al generador para crear nuevos guiones.</p>
+            <a href="../generators/script-generator.html" style="display:block;text-decoration:none">
+                <button class="btn-generate">Abrir Generador</button>
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🛒 Mi Plan</div>
+            <div id="plan-info" style="color:#666">
+                <p style="margin-bottom:1rem">Plan: <strong id="user-plan">Gratis</strong></p>
+                <p>Guiones disponibles: <strong id="guiones-limit">3</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAarGE7Z-RDk0JSozUfTMOw7IRpEWTUR78",
+  authDomain: "app-df74f.firebaseapp.com",
+  databaseURL: "https://app-df74f-default-rtdb.firebaseio.com",
+  projectId: "app-df74f",
+  storageBucket: "app-df74f.firebasestorage.app",
+  messagingSenderId: "603466451706",
+  appId: "1:603466451706:web:87aa5e4be5b-e0bb9495743",
+  measurementId: "G-V2G8TQDC0Y"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+
+function logoutUser() {
+    auth.signOut().then(() => {
+        window.location.href = 'app-login.html';
+    });
+}
+
+function downloadGuion(name, content) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([content], {type:'text/plain'}));
+    a.download = name + '.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+auth.onAuthStateChanged(user => {
+    if (!user) {
+        window.location.href = 'app-login.html';
+        return;
+    }
+
+    document.getElementById('user-email').textContent = user.email;
+
+    db.ref('users/' + user.uid + '/guiones').on('value', snapshot => {
+        const guiones = snapshot.val() || {};
+        const list = document.getElementById('guiones-list');
+
+        if (Object.keys(guiones).length === 0) {
+            list.innerHTML = '<div class="empty">Aún no tienes guiones guardados.</div>';
+            return;
+        }
+
+        list.innerHTML = '';
+        Object.entries(guiones).forEach(([id, guion]) => {
+            const item = document.createElement('div');
+            item.className = 'guion-item';
+            item.innerHTML = `
+                <div>
+                    <div class="guion-name">${guion.nombre || 'Guión sin nombre'}</div>
+                    <div class="guion-date">${new Date(guion.fecha).toLocaleDateString()}</div>
+                </div>
+                <button class="btn-download" onclick="downloadGuion('${guion.nombre}', \`${guion.contenido}\`)">Descargar</button>
+            `;
+            list.appendChild(item);
+        });
+    });
+});
+</script>
+</body>
+</html>

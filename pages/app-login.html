@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOIR Scripts - Acceso</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @keyframes holo-bg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes holo-border {
+            0% { border-color: rgba(220,180,255,.8); box-shadow: 0 0 20px rgba(200,150,255,.4); }
+            50% { border-color: rgba(180,255,220,.8); box-shadow: 0 0 20px rgba(150,255,200,.4); }
+            100% { border-color: rgba(220,180,255,.8); box-shadow: 0 0 20px rgba(200,150,255,.4); }
+        }
+
+        @keyframes holo-text {
+            0% { color: #9966cc; }
+            50% { color: #66bb99; }
+            100% { color: #9966cc; }
+        }
+
+        body {
+            background: linear-gradient(120deg, #f4f0ff, #eef8ff, #eefff8, #fff0f8, #f8f0ff, #eef4ff, #f4f0ff);
+            background-size: 400% 400%;
+            animation: holo-bg 10s ease infinite;
+            min-height: 100vh;
+            padding: 2rem;
+            font-family: 'Crimson Text', serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .card {
+            background: linear-gradient(145deg, rgba(255,255,255,.92), rgba(248,242,255,.85));
+            border: 1.5px solid;
+            padding: 2.5rem;
+            border-radius: 20px;
+            animation: holo-border 6s linear infinite;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 40px rgba(170,130,255,.15);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            text-align: center;
+            animation: holo-text 6s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: .8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: holo-text 6s linear infinite;
+            margin-bottom: .5rem;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: .75rem 1rem;
+            background: rgba(255,255,255,.8);
+            border: 1.5px solid;
+            animation: holo-border 6s linear infinite;
+            border-radius: 10px;
+            font-family: 'Crimson Text', serif;
+            font-size: 1rem;
+            color: #333;
+            backdrop-filter: blur(8px);
+        }
+
+        input:focus {
+            outline: none;
+            background: rgba(255,255,255,.95);
+        }
+
+        .btn {
+            width: 100%;
+            padding: .9rem;
+            background: linear-gradient(135deg, rgba(190,150,255,.85), rgba(150,190,255,.85));
+            color: rgba(50,30,70,.9);
+            border: 1.5px solid rgba(190,150,255,.6);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            border-radius: 10px;
+            transition: transform .2s;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: .9rem;
+            color: #666;
+        }
+
+        .toggle-form a {
+            color: #9966cc;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .error {
+            color: #d32f2f;
+            font-size: .85rem;
+            margin-top: .5rem;
+        }
+
+        .success {
+            color: #388e3c;
+            font-size: .85rem;
+            margin-top: .5rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="logo">⚡ NOIR</div>
+
+        <!-- LOGIN -->
+        <div id="login-form">
+            <h2 style="font-family:'Orbitron';font-size:1.2rem;animation:holo-text 6s linear infinite;margin-bottom:2rem;text-align:center;text-transform:uppercase">Acceso</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="tu@email.com">
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" id="login-password" placeholder="••••••••">
+            </div>
+            <button class="btn" onclick="loginUser()">Acceder</button>
+            <div id="login-error" class="error"></div>
+            <div class="toggle-form">
+                ¿Sin cuenta? <a onclick="toggleForm()">Crear una</a>
+            </div>
+        </div>
+
+        <!-- REGISTRO -->
+        <div id="signup-form" class="hidden">
+            <h2 style="font-family:'Orbitron';font-size:1.2rem;animation:holo-text 6s linear infinite;margin-bottom:2rem;text-align:center;text-transform:uppercase">Registrarse</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="signup-email" placeholder="tu@email.com">
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" id="signup-password" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+                <label>Confirmar</label>
+                <input type="password" id="signup-confirm" placeholder="••••••••">
+            </div>
+            <button class="btn" onclick="signupUser()">Crear Cuenta</button>
+            <div id="signup-error" class="error"></div>
+            <div id="signup-success" class="success"></div>
+            <div class="toggle-form">
+                ¿Ya tienes cuenta? <a onclick="toggleForm()">Acceder</a>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <p>Procesando...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAarGE7Z-RDk0JSozUfTMOw7IRpEWTUR78",
+  authDomain: "app-df74f.firebaseapp.com",
+  databaseURL: "https://app-df74f-default-rtdb.firebaseio.com",
+  projectId: "app-df74f",
+  storageBucket: "app-df74f.firebasestorage.app",
+  messagingSenderId: "603466451706",
+  appId: "1:603466451706:web:87aa5e4be5be0bb9495743",
+  measurementId: "G-V2G8TQDC0Y"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+
+function toggleForm() {
+    document.getElementById('login-form').classList.toggle('hidden');
+    document.getElementById('signup-form').classList.toggle('hidden');
+}
+
+function loginUser() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const error = document.getElementById('login-error');
+
+    error.textContent = '';
+
+    if (!email || !password) {
+        error.textContent = 'Completa todos los campos';
+        return;
+    }
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then(user => {
+            window.location.href = 'dashboard.html';
+        })
+        .catch(err => {
+            error.textContent = 'Email o contraseña incorrectos';
+        });
+}
+
+function signupUser() {
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const confirm = document.getElementById('signup-confirm').value;
+    const error = document.getElementById('signup-error');
+    const success = document.getElementById('signup-success');
+
+    error.textContent = '';
+    success.textContent = '';
+
+    if (!email || !password || !confirm) {
+        error.textContent = 'Completa todos los campos';
+        return;
+    }
+
+    if (password !== confirm) {
+        error.textContent = 'Las contraseñas no coinciden';
+        return;
+    }
+
+    if (password.length < 6) {
+        error.textContent = 'Mínimo 6 caracteres';
+        return;
+    }
+
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(user => {
+            db.ref('users/' + user.user.uid).set({
+                email: email,
+                createdAt: new Date().toISOString(),
+                guiones: {}
+            });
+            success.textContent = '✓ Cuenta creada. Accediendo...';
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        })
+        .catch(err => {
+            if (err.code === 'auth/email-already-in-use') {
+                error.textContent = 'Este email ya está registrado';
+            } else {
+                error.textContent = err.message;
+            }
+        });
+}
+
+// Verificar si ya está logueado
+auth.onAuthStateChanged(user => {
+    if (user) {
+        window.location.href = 'dashboard.html';
+    }
+});
+</script>
+</body>
+</html>
