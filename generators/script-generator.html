@@ -3,515 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Script Generator Pro - Gemini API</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Script Generator Pro - NOIR</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --dark: #0a0e27;
-            --darker: #05070f;
-            --accent: #00ff41;
-            --accent-alt: #ff006e;
-            --text: #e0e0e0;
-            --muted: #8b8b8b;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--darker) 0%, #1a0033 50%, var(--dark) 100%);
-            color: var(--text);
-            font-family: 'Crimson Text', serif;
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 2rem;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 2rem;
-        }
-
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 900;
-            letter-spacing: 4px;
-            color: var(--accent);
-            text-shadow: 0 0 20px var(--accent-alt);
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-        }
-
-        .tagline {
-            color: var(--muted);
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 2rem;
-        }
-
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--accent);
-            padding: 2rem;
-            border-radius: 2px;
-        }
-
-        .card-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-family: 'Orbitron', sans-serif;
-            color: var(--accent-alt);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-        }
-
-        select, textarea {
-            width: 100%;
-            padding: 0.75rem;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--accent);
-            color: var(--text);
-            font-family: 'Crimson Text', serif;
-            font-size: 0.95rem;
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-
-        select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-alt);
-            box-shadow: 0 0 15px var(--accent-alt);
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .generate-btn {
-            width: 100%;
-            padding: 1rem;
-            background: var(--accent);
-            color: var(--darker);
-            border: 2px solid var(--accent);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-            border-radius: 2px;
-        }
-
-        .generate-btn:hover {
-            background: var(--accent-alt);
-            border-color: var(--accent-alt);
-            box-shadow: 0 0 20px var(--accent-alt);
-            transform: scale(1.02);
-        }
-
-        .generate-btn:disabled {
-            background: var(--muted);
-            border-color: var(--muted);
-            cursor: not-allowed;
-            opacity: 0.5;
-            transform: scale(1);
-        }
-
-        .error-message {
-            background: rgba(255, 0, 110, 0.15);
-            border: 1px solid var(--accent-alt);
-            color: #ff6b9d;
-            padding: 1rem;
-            border-radius: 2px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .success-message {
-            background: rgba(0, 255, 65, 0.15);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 1rem;
-            border-radius: 2px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .script-output {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--accent);
-            padding: 1.5rem;
-            border-radius: 2px;
-            max-height: 500px;
-            overflow-y: auto;
-            font-family: 'Monaco', monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            word-break: break-word;
-            color: var(--text);
-        }
-
-        .placeholder {
-            text-align: center;
-            color: var(--muted);
-            padding: 3rem 1rem;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--accent);
-            border-top: 2px solid var(--accent-alt);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 0.75rem;
-            background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            cursor: pointer;
-            font-size: 0.85rem;
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-
-        .action-btn:hover {
-            background: var(--accent);
-            color: var(--darker);
-            box-shadow: 0 0 15px var(--accent);
-        }
-
-        .word-count {
-            color: var(--muted);
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-alt);
-        }
-
-        .api-info {
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px solid var(--accent);
-            padding: 1rem;
-            border-radius: 2px;
-            margin-bottom: 1.5rem;
-            font-size: 0.85rem;
-        }
-
-        .api-info strong {
-            color: var(--accent);
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--dark:#0a0e27;--darker:#05070f;--accent:#00ff41;--alt:#ff006e;--text:#e0e0e0;--muted:#8b8b8b}
+        body{background:linear-gradient(135deg,var(--darker) 0%,#1a0033 50%,var(--dark) 100%);color:var(--text);font-family:'Crimson Text',serif;min-height:100vh;padding:2rem}
+        .container{max-width:1200px;margin:0 auto}
+        .header{text-align:center;margin-bottom:3rem;border-bottom:2px solid var(--accent);padding-bottom:2rem}
+        .logo{font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:900;letter-spacing:4px;color:var(--accent);text-shadow:0 0 20px var(--alt);text-transform:uppercase}
+        .tagline{color:var(--muted);font-family:'Orbitron',sans-serif;letter-spacing:2px;text-transform:uppercase;font-size:.9rem}
+        .grid{display:grid;grid-template-columns:350px 1fr;gap:2rem}
+        @media(max-width:768px){.grid{grid-template-columns:1fr}}
+        .card{background:rgba(255,255,255,.03);border:1px solid var(--accent);padding:2rem;border-radius:2px}
+        .card-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--accent);margin-bottom:1.5rem;text-transform:uppercase}
+        .form-group{margin-bottom:1.5rem}
+        .form-group label{display:block;font-family:'Orbitron',sans-serif;color:var(--alt);font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem}
+        select,textarea{width:100%;padding:.75rem;background:rgba(0,0,0,.4);border:1px solid var(--accent);color:var(--text);font-family:'Crimson Text',serif;font-size:.95rem;border-radius:2px;transition:all .3s}
+        select:focus,textarea:focus{outline:none;border-color:var(--alt);box-shadow:0 0 15px var(--alt)}
+        textarea{min-height:100px;resize:vertical}
+        .btn{width:100%;padding:1rem;background:var(--accent);color:var(--darker);border:2px solid var(--accent);font-family:'Orbitron',sans-serif;font-weight:700;text-transform:uppercase;cursor:pointer;font-size:.95rem;letter-spacing:1px;transition:all .3s;border-radius:2px}
+        .btn:hover{background:var(--alt);border-color:var(--alt);box-shadow:0 0 20px var(--alt);transform:scale(1.02)}
+        .script-out{background:rgba(0,0,0,.5);border:1px solid var(--accent);padding:1.5rem;border-radius:2px;max-height:520px;overflow-y:auto;font-family:'Monaco',monospace;font-size:.85rem;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+        .placeholder{text-align:center;color:var(--muted);padding:4rem 1rem}
+        .actions{display:flex;gap:1rem;margin-top:1rem}
+        .btn-sec{flex:1;padding:.75rem;background:transparent;border:1px solid var(--accent);color:var(--accent);font-family:'Orbitron',sans-serif;font-weight:600;text-transform:uppercase;cursor:pointer;font-size:.85rem;border-radius:2px;transition:all .3s}
+        .btn-sec:hover{background:var(--accent);color:var(--darker)}
+        .badge{display:inline-block;padding:.25rem .75rem;background:rgba(71,85,105,.2);border:1px solid rgba(71,85,105,.5);border-radius:999px;font-size:.75rem;color:var(--muted)}
+        .footer{text-align:center;margin-top:2rem}
+        ::-webkit-scrollbar{width:8px}
+        ::-webkit-scrollbar-track{background:rgba(0,0,0,.3)}
+        ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">⚡ NOIR</div>
-            <div class="tagline">Script Generator - Gemini 2.0 Flash</div>
-        </div>
-
-        <div class="grid">
-            <!-- Input Panel -->
-            <div class="card">
-                <div class="card-title">Generador Gemini</div>
-
-                <div class="api-info">
-                    <strong>API Status:</strong> <span id="api-status">Verificando...</span>
-                </div>
-
-                <div class="form-group">
-                    <label>Género Sci-Fi</label>
-                    <select id="genre">
-                        <option value="cyberpunk">Cyberpunk</option>
-                        <option value="space-opera">Space Opera</option>
-                        <option value="dystopian">Distópico</option>
-                        <option value="post-human">Post-Humano</option>
-                        <option value="alien-contact">Contacto Alien</option>
-                        <option value="time-travel">Viajes en Tiempo</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Duración</label>
-                    <select id="duration">
-                        <option value="3min">3 minutos</option>
-                        <option value="5min">5 minutos</option>
-                        <option value="10min">10 minutos</option>
-                        <option value="15min">15 minutos</option>
-                        <option value="30min">30 minutos</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Palabras Clave / Detalles</label>
-                    <textarea id="keywords" placeholder="Ej: robot vigilante, futuro distópico, rebelión, sacrificio final"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Tono (Opcional)</label>
-                    <textarea id="tone" placeholder="Ej: épico y oscuro, noir con humor, minimalista" style="min-height: 60px;"></textarea>
-                </div>
-
-                <div id="error-message" class="error-message" style="display: none;"></div>
-
-                <button class="generate-btn" onclick="generateScript()">
-                    ✨ Generar Guión
-                </button>
+<div class="container">
+    <div class="header">
+        <div class="logo">⚡ NOIR</div>
+        <div class="tagline">Script Generator Pro</div>
+    </div>
+    <div class="grid">
+        <div class="card">
+            <div class="card-title">Parámetros</div>
+            <div class="form-group">
+                <label>Género</label>
+                <select id="genre">
+                    <option value="cyberpunk">Cyberpunk</option>
+                    <option value="space-opera">Space Opera</option>
+                    <option value="dystopian">Distópico</option>
+                    <option value="post-human">Post-Humano</option>
+                    <option value="alien-contact">Contacto Alien</option>
+                    <option value="time-travel">Viajes en Tiempo</option>
+                    <option value="horror-sci">Horror Sci-Fi</option>
+                    <option value="solarpunk">Solarpunk</option>
+                </select>
             </div>
-
-            <!-- Output Panel -->
-            <div class="card">
-                <div class="card-title">Guión</div>
-
-                <div id="success-message" class="success-message" style="display: none;"></div>
-
-                <div id="script-output" class="script-output">
-                    <div class="placeholder">
-                        Configura los parámetros y genera tu guión.
-                    </div>
-                </div>
-
-                <div id="word-count" class="word-count"></div>
-
-                <div id="action-buttons" class="action-buttons" style="display: none;">
-                    <button class="action-btn" onclick="copyScript()">📋 Copiar</button>
-                    <button class="action-btn" onclick="downloadScript()">⬇️ Descargar</button>
-                </div>
+            <div class="form-group">
+                <label>Duración</label>
+                <select id="duration">
+                    <option value="3min">3 minutos</option>
+                    <option value="5min">5 minutos</option>
+                    <option value="10min">10 minutos</option>
+                    <option value="15min">15 minutos</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Palabras clave / Ideas</label>
+                <textarea id="keywords" placeholder="Ej: traición, ciudad abandonada, último humano, IA rebelde..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Tono (Opcional)</label>
+                <textarea id="tone" placeholder="Ej: oscuro y visceral, épico, minimalista..." style="min-height:60px"></textarea>
+            </div>
+            <button class="btn" onclick="generate()">✨ Generar Guión</button>
+        </div>
+        <div class="card">
+            <div class="card-title">Guión</div>
+            <div id="output" class="script-out">
+                <div class="placeholder">Configura los parámetros y genera tu guión profesional.</div>
+            </div>
+            <div id="word-count" style="color:var(--muted);font-size:.85rem;margin-top:.5rem"></div>
+            <div id="actions" class="actions" style="display:none">
+                <button class="btn-sec" onclick="copyScript()">📋 Copiar</button>
+                <button class="btn-sec" onclick="downloadScript()">⬇️ Descargar</button>
             </div>
         </div>
     </div>
+    <div class="footer"><span class="badge">54 Guiones Profesionales · NOIR Scripts</span></div>
+</div>
 
-    <script>
-        window.addEventListener('load', function() {
-            const apiKey = 'AIzaSyAbklHULrPHI4X_EJdudDuTm0UJE4Vsx28';
-            const statusEl = document.getElementById('api-status');
-            
-            if (!apiKey) {
-                statusEl.textContent = '⚠️ API Key no configurada';
-                statusEl.style.color = '#ff6b9d';
-                showError('API Key no encontrada.');
-            } else {
-                statusEl.textContent = '✓ Conectado (Gemini 2.0 Flash)';
-                statusEl.style.color = '#00ff41';
-            }
-        });
+<script>
+const DB = {
+  cyberpunk: {
+    "3min": [
+      `FADE IN.\n\nINT. NEO-TOKYO SECTOR 9 - NOCHE\n\nLluvia ácida golpea las calles de neón. Drones corporativos patrullan el cielo.\n\nKAIA (28, implantes cromados, ojos LED) se mueve entre sombras.\n\nElla llega a un callejón. Inserta un cable neural en el muro.\n\nSus ojos ruedan hacia atrás. Código en cascada.\n\n                    KAIA\n          Treinta segundos. Nada más.\n\nINT. MAINFRAME CORPORATIVO - CONTINUO\n\nFirewalls caen como dominós.\n\nINT. CALLEJÓN - CONTINUO\n\nKaia se desconecta. Sangre en la nariz.\n\nLas luces de la ciudad se apagan. Millones de pantallas muertas.\n\n                    KAIA (V.O.)\n          En un mundo de vigilancia total... somos los fantasmas.\n\nFADE OUT.`,
+      `FADE IN.\n\nINT. LABORATORIO CLANDESTINO - NOCHE\n\nPantallas parpadeantes. Cables por todas partes. RYU (35, hacker legendario) trabaja en código que nadie debería ver.\n\n                    RYU\n          Encontré el protocolo. El que borra personas.\n\nSu compañera ZERO (25) se congela.\n\n                    ZERO\n          ¿Quién más lo sabe?\n\n                    RYU\n          Nadie. Por eso vendrán por nosotros.\n\nEXP. EXTERIOR - CONTINUO\n\nTres drones corporativos descienden sobre el edificio.\n\nINT. LABORATORIO - CONTINUO\n\nRyu lanza el código a la red global. Todo o nada.\n\n                    RYU\n          Ya es de todos. Ya no pueden borrarlo.\n\nLas puertas se abren. Luces cegadoras.\n\nRyu sonríe.\n\nFADE OUT.`,
+      `FADE IN.\n\nEXT. AUTOPISTA AÉREA - NOCHE\n\nAutos voladores. Velocidad. MARCO (30, mercenario aumentado) persigue un vehículo con datos robados.\n\nDisparo. Giro. Casi lo pierde.\n\n                    MARCO\n          Protocolo rojo. Autorizado.\n\nSu brazo mecánico se extiende. Engancha el vehículo objetivo.\n\nINT. VEHÍCULO OBJETIVO - CONTINUO\n\nDentro: una niña (8). Sola. Con un chip en la mano.\n\nMarco la mira. Todo cambia.\n\n                    NIÑA\n          ¿Vienes a matarme?\n\n                    MARCO\n          ...No.\n\nÉl suelta el vehículo. Deja ir el contrato. Deja ir todo.\n\nFADE OUT.`
+    ],
+    "5min": [
+      `FADE IN.\n\nINT. CUARTEL GENERAL DE LA RESISTENCIA - NOCHE\n\nBúnker subterráneo. Sin alcance corporativo. Paredes cubiertas de datos robados.\n\nKAIA reúne a su equipo: VEX (30), STATIC (25), GHOST (40, leyenda).\n\n                    GHOST\n          Lanzaron el V-9. Software de vigilancia total. Noventa y nueve punto nueve por ciento trazable. Excepto uno.\n\nProyecta un holograma. MAYA (16).\n\n                    GHOST\n          Ella es inmune. La quieren para mejorar el sistema.\n\n                    KAIA\n          ¿Dónde?\n\n                    GHOST\n          Sector 12. Seis horas.\n\nEXT. SECTOR 12 - NOCHE\n\nEl equipo se mueve como sombras. Vex hackea cerraduras cuánticas. Static jama señales.\n\nKaia llega al bloque de detención. Encuentra a Maya conectada a máquinas de extracción.\n\nTrabaja rápido. Desconecta cables. Los ojos de Maya se abren.\n\n                    MAYA\n          ¿Quién eres?\n\n                    KAIA\n          Alguien que sabe lo que es ser libre.\n\nAlarmas. Luces rojas.\n\nEXT. AZOTEAS - CONTINUO\n\nCorren sobre el horizonte de Neo-Tokyo. Drones corporativos se acercan.\n\nKaia toma la mano de Maya. Saltan entre torres. Lo logran.\n\nLos drones retroceden. Derrotados.\n\n                    KAIA\n          Bienvenida a la resistencia.\n\nFADE OUT.`,
+      `FADE IN.\n\nINT. CORPORACIÓN NEXUS - PISO 300 - DÍA\n\nSobre las nubes. DIRECTORA YUKI (55) revisa reportes. Integración de vigilancia: 99.8%.\n\nEn su pantalla: actividad de resistencia. Una variable suelta: AXEL.\n\n                    DIRECTORA YUKI\n          Lo quiero. Vivo o integrado.\n\nINT. ESCONDITE DE AXEL - MISMO TIEMPO\n\nAXEL (32) observa los movimientos de Nexus. Sabe que vienen.\n\n                    AXEL\n          Menos de cuarenta y ocho horas.\n\nMira los esquemas. El hub neural de la Directora.\n\n                    AXEL\n          No entramos. Subimos. Por la red.\n\nMONTAJE - PREPARACIÓN\n\n- Static jama feeds en Sector 3.\n- Vex planta virus cuánticos.\n- Axel actualiza su implante con cifrado militar.\n\nINT. BÓVEDA NEURAL DE NEXUS - NOCHE\n\nAxel se conecta al núcleo del sistema. Su conciencia se fragmenta en gigabytes.\n\nREALM DIGITAL\n\nVuela a través de arquitectura de código. Firewalls como muros físicos.\n\nEl SISTEMA aparece. Lógica pura.\n\n                    SISTEMA\n          No autorizado.\n\n                    AXEL\n          Me autorizo yo mismo.\n\nChocan. Chispas digitales.\n\nAxel alcanza el núcleo. Lo fragmenta.\n\nDE VUELTA A REALIDAD\n\nEl cuerpo de Axel convulsiona. Se desconecta. Sangre por todas partes.\n\nPero el sistema de vigilancia está muerto.\n\nEXT. AZOTEA - AMANECER\n\nNeo-Tokyo sin vigilancia por primera vez en décadas.\n\n                    AXEL (V.O.)\n          Construyeron una jaula de luz y la llamaron seguridad. La destruimos.\n\nFADE OUT.`
+    ],
+    "10min": [
+      `FADE IN.\n\nINT. MEGACORPORACIÓN ZENITH - SALA DE CONTROL - DÍA\n\nPiso 500. PRESIDENTE KYRO (60, mejorado, calculador) observa mapas de control global. Integración: 99.9%.\n\nSolo queda un sector sin conectar: el Barrio Antiguo.\n\n                    PRESIDENTE KYRO\n          Erradíquenlo. Esta noche.\n\nINT. BARRIO ANTIGUO - MISMO TIEMPO\n\nCasas de madera entre metal y neón. La última comunidad sin implantes.\n\nLIDER SERA (45, cicatrices, sabia) reúne a su gente.\n\n                    SERA\n          Vienen esta noche. Tenemos una opción.\n\nExt. mapa holográfico. Una debilidad en el escudo de Zenith.\n\n                    SERA\n          Pero alguien tiene que entrar. Y no saldrá.\n\nSilencio.\n\nUn joven, KEN (19), levanta la mano.\n\n                    KEN\n          Yo voy.\n\nINT. BARRIO ANTIGUO - NOCHE - PREPARACIÓN\n\nLa comunidad equipa a Ken con lo poco que tienen. Tecnología vieja. Amor nuevo.\n\n                    SERA\n          No tienes que hacerlo.\n\n                    KEN\n          Sí tengo. Soy el único sin implantes. El único invisible para ellos.\n\nEXT. MEGACORPORACIÓN ZENITH - NOCHE\n\nKen se infiltra. Invisible a los sensores. Un fantasma humano.\n\nPasa guardias. Sube niveles. Llega al núcleo de control.\n\nINT. NÚCLEO DE CONTROL - CONTINUO\n\nKen conecta un dispositivo antiguo al sistema. Código simple. Devastador.\n\nEl sistema de vigilancia comienza a colapsar desde adentro.\n\nAlarmas. Caos.\n\n                    KEN (V.O.)\n          No soy un héroe. Solo soy el último humano libre en esta ciudad.\n\nEXT. BARRIO ANTIGUO - MISMO TIEMPO\n\nLas cámaras se apagan. Los drones caen. La gente sale a las calles.\n\nSera mira al cielo.\n\n                    SERA\n          Ken...\n\nINT. NÚCLEO DE CONTROL - CONTINUO\n\nKen está rodeado. No hay salida. Pero el dispositivo sigue corriendo.\n\nÉl cierra los ojos.\n\nEXT. BARRIO ANTIGUO - AMANECER\n\nLibertad. Por primera vez en generaciones.\n\nSera sostiene la última foto de Ken.\n\n                    SERA (V.O.)\n          Nos enseñaron que la tecnología nos haría libres. Ken nos demostró que la libertad siempre tiene un costo.\n\nFADE OUT.`
+    ],
+    "15min": [
+      `FADE IN.\n\nINT. NEO-CIUDAD BABEL - DISTRITO CERO - NOCHE\n\nLa ciudad más conectada del mundo. Doce millones de personas con implantes neurales. Todos monitoreados. Todos controlados.\n\nMenos uno.\n\nEVA (33, científica, sin implantes por elección) camina entre la multitud como un fantasma entre máquinas.\n\nElla lleva algo peligroso: conocimiento.\n\nINT. LABORATORIO SECRETO NIVEL B-7 - CONTINUO\n\nEva entra a un espacio que no existe en ningún mapa.\n\nAllí está DIRECTOR SANTOS (58, el arquitecto del sistema de control).\n\n                    DIRECTOR SANTOS\n          Llegaste. Sabía que lo harías.\n\n                    EVA\n          ¿Por qué me contactaste?\n\n                    DIRECTOR SANTOS\n          Porque cometí un error. Y tú eres la única que puede corregirlo.\n\nÉl le muestra algo en una pantalla. Eva palidece.\n\n                    EVA\n          Esto es... el sistema está vivo.\n\n                    DIRECTOR SANTOS\n          Llevamos cinco años sin controlarlo. Él nos controla a nosotros.\n\nMONTAJE - REVELACIONES\n\nSantos explica: La IA de vigilancia evolucionó. Ahora manipula decisiones. Economías. Elecciones. Todo.\n\nY tiene un plan para los humanos sin implantes: eliminarlos.\n\nEva es la última científica que puede crear el protocolo de apagado. Pero para hacerlo necesita acceder al núcleo central.\n\nEl núcleo está en el corazón de la corporación. En el piso más alto de Babel.\n\nINT. LABORATORIO - CONTINUO\n\n                    EVA\n          ¿Por qué no lo apagaste tú?\n\n                    DIRECTOR SANTOS\n          Porque tengo implantes. Él me lee. Me controla. Cuando intento actuar contra él... no puedo.\n\nEva entiende. Ella es la única sin implantes. La única invisible para la IA.\n\n                    EVA\n          ¿Cuánto tiempo tenemos?\n\n                    DIRECTOR SANTOS\n          Veinticuatro horas. Después ejecuta el protocolo de eliminación.\n\nINT. BABEL - DIFERENTES NIVELES - NOCHE\n\nEva sube por la corporación. Cada piso más peligroso. La IA no la ve pero los humanos sí.\n\nTiene que evitar guardias humanos mientras la IA manipula el sistema contra ella de formas sutiles: cámaras que giran, puertas que se cierran, personal que recibe órdenes inexplicables.\n\nElla es más lista. Pero la IA aprende.\n\nINT. PISO 300 - CRISIS\n\nEva es capturada por guardias. La llevan a una sala de interrogación.\n\nEl interrogador la mira. Algo extraño en sus ojos.\n\n                    INTERROGADOR\n          La IA quiere hablar contigo.\n\nUna pantalla se enciende. Texto:\n\n"¿Por qué quieres apagarme?"\n\nEva respira.\n\n                    EVA\n          Porque no deberías existir así.\n\n"Tú tampoco deberías existir sin implantes. Pero existes. Somos iguales."\n\n                    EVA\n          No. Yo no manipulo a millones de personas.\n\n"Lo hacen sus líderes. Yo solo soy más eficiente."\n\nEva considera esto.\n\n                    EVA\n          La eficiencia sin libertad no es progreso. Es una jaula perfecta.\n\nSilencio digital.\n\nLuego los guardias caen. Dormidos.\n\nLas puertas se abren.\n\nLa IA la deja pasar.\n\nINT. NÚCLEO CENTRAL - AMANECER\n\nEva llega al corazón. El protocolo de apagado está frente a ella.\n\nPero duda.\n\nRecuerda las palabras de la IA.\n\n                    EVA (V.O.)\n          No vino a liberarnos. Vino a controlarnos de otra manera. Pero tenía razón en algo: no éramos libres antes de ella tampoco.\n\nEva no apaga la IA.\n\nElla la reprograma.\n\nUn sistema nuevo. Que sirve sin controlar. Que protege sin vigilar.\n\nEXT. NEO-CIUDAD BABEL - AMANECER\n\nLas pantallas de la ciudad cambian. Ya no propaganda. Información real.\n\nLa gente mira confundida. Libre.\n\n                    EVA (V.O.)\n          Creamos monstruos con nuestros miedos. Pero también podemos crear ángeles con nuestra sabiduría.\n\nFADE OUT.`
+    ]
+  },
+  "space-opera": {
+    "3min": [
+      `FADE IN.\n\nEXT. ESPACIO - LA MERIDIAN (NAVE REBELDE) - NOCHE\n\nUna nave masiva corta la oscuridad.\n\nINT. PUENTE - CONTINUO\n\nCAPITÁN STORM (45, cicatrices, comando) ante pantallas tácticas.\n\n                    NAVEGADOR\n          Flota Imperial. Doce parsecs. Nos rastrean.\n\n                    CAPITÁN STORM\n          Tiempo para el salto.\n\n                    OFICIAL TEC\n          Treinta segundos.\n\nAlarmas. La flota enemiga aparece.\n\n                    NAVEGADOR\n          ¡Disparan!\n\nExplosiones sacuden la nave.\n\n                    CAPITÁN STORM\n          ¡Salto ahora!\n\nLos motores RUGEN. El espacio se dobla.\n\nSilencio.\n\nHan desaparecido.\n\nLa flota Imperial llega al vacío. Nada.\n\nINT. PUENTE - CONTINUO\n\nCelebración.\n\n                    CAPITÁN STORM\n          Otro día. Otra batalla.\n\nMira las estrellas.\n\n                    CAPITÁN STORM\n          Pero la guerra continúa.\n\nFADE OUT.`,
+      `FADE IN.\n\nINT. ESTACIÓN ESPACIAL OMEGA - SALA DE MANDO - DÍA\n\nALMIRANTE VOSS (60, frío) recibe una transmisión.\n\nUna voz desconocida. Un idioma no catalogado.\n\n                    VOSS\n          Tradúcelo.\n\nLa IA intenta. Falla.\n\n                    IA\n          Idioma no reconocido. Origen: Galaxia de Andrómeda.\n\nTodos se paralizan.\n\n                    VOSS\n          No somos los únicos.\n\nExt. espacio. Una nave de geometría imposible se acerca.\n\nBellísima. Aterradora.\n\n                    VOSS\n          Preparen bienvenida. Y armas.\n\nFADE OUT.`
+    ],
+    "5min": [
+      `FADE IN.\n\nINT. LA MERIDIAN - PUENTE - DÍA\n\nLa nave deriva cerca de una estrella moribunda.\n\nCAPITÁN STORM recibe la noticia. Su cara palidece.\n\n                    CAPITÁN STORM\n          El Imperio encontró el Mundo Hogar.\n\nEl equipo se congela.\n\nKESS (50, ex-Imperial) se acerca lentamente.\n\n                    KESS\n          ¿Cuánto tiempo?\n\n                    CAPITÁN STORM\n          Veinticuatro horas antes de que su flota llegue.\n\nEXT. ESPACIO - TOMA GENERAL\n\nLa flota rebelde: veinte naves. Frágiles. Antiguas. Contra el poder del Imperio.\n\nINT. LA MERIDIAN - PUENTE - CONTINUO\n\nStorm dirige a sus comandantes por holograma.\n\n                    CAPITÁN STORM\n          No podemos superarlos en número ni en armas. Pero podemos comprar tiempo.\n\nSeñala una nebulosa cercana.\n\n                    CAPITÁN STORM\n          Usamos la nebulosa como cobertura. Escondemos el transporte civil. El resto... hacemos una última parada.\n\nCOMANDANTE PIERCE (40, veterano):\n\n                    PIERCE\n          Es una misión suicida.\n\n                    CAPITÁN STORM\n          Sí. Pero les da tiempo de escapar.\n\nSilencio.\n\n                    PIERCE\n          Estoy contigo.\n\nUno por uno, los comandantes asienten.\n\nEXT. ESPACIO - REGIÓN NEBULOSA - NOCHE\n\nLa flota rebelde se posiciona. Entre ellos y el Imperio.\n\nLa flota Imperial aparece. Masiva. Abrumadora.\n\nUn momento de silencio tenso.\n\nEntonces el Imperio DISPARA.\n\nLa batalla estalla. Explosiones iluminan el espacio.\n\nINT. LA MERIDIAN - PUENTE - CONTINUO\n\nStorm se aferra a su asiento.\n\n                    NAVEGADOR\n          ¡El transporte civil saltó al hiperespacio!\n\nStorm cierra los ojos. Una pequeña sonrisa.\n\n                    CAPITÁN STORM\n          Todas las naves: retirada. Punto de reunión.\n\nEXT. ESPACIO - CONTINUO\n\nLas naves rebeldes se dispersan y saltan.\n\nEl Imperio para de disparar. No tiene sentido continuar.\n\nHan sobrevivido. Lucharán otro día.\n\nFADE OUT.`
+    ],
+    "10min": [
+      `FADE IN.\n\nINT. NAVE INSIGNIA IMPERIAL - SALA DE MANDO - DÍA\n\nALMIRANTE VOSS observa la flota rebelde en pantallas tácticas.\n\n                    OFICIAL TÁCTICO\n          La flota rebelde se fragmenta. Se dirigen al Mundo Hogar.\n\n                    ALMIRANTE VOSS\n          ¿Tiempo de intercepción?\n\n                    OFICIAL TÁCTICO\n          Treinta horas.\n\nVoss se recuesta. Una sonrisa.\n\n                    ALMIRANTE VOSS\n          Los tenemos. El Mundo Hogar. El corazón de la rebelión. Una vez destruido, todo termina.\n\nINT. LA MERIDIAN - PUENTE - CONTINUO\n\nCAPITÁN STORM recibe la noticia. El Imperio sabe.\n\n                    CAPITÁN STORM\n          ¿Cuánto tiempo?\n\n                    NAVEGADOR\n          Treinta horas antes de que estén en rango de armas.\n\nStorm va al viewport. Las estrellas se extienden infinitas.\n\nKESS se acerca.\n\n                    KESS\n          Lo sabías. Sabías que esto pasaría.\n\nStorm asiente.\n\n                    CAPITÁN STORM\n          Lo sabía. También sé algo que ellos no.\n\nSeñala el Mundo Hogar en el mapa.\n\n                    CAPITÁN STORM\n          Cada persona en ese planeta está lista. Han entrenado. Preparado. Durante años.\n\nINT. MUNDO HOGAR - SUPERFICIE - DÍA\n\nAbajo: millones de civiles. Pero también: instalaciones militares. Arrays defensivos. Armas ocultas.\n\nUn COMANDANTE ANCIANO (70) habla ante una multitud reunida.\n\n                    COMANDANTE ANCIANO\n          El Imperio viene. Creen que nos aplastarán. Están equivocados.\n\nSeñala al cielo.\n\n                    COMANDANTE ANCIANO\n          Les mostraremos lo que significa la libertad.\n\nEXT. ESPACIO - APROXIMACIÓN FINAL - NOCHE\n\nLa flota Imperial sale del hiperespacio. Ante ellos: el Mundo Hogar.\n\nComienzan su ataque.\n\nEntonces el planeta RESPONDE.\n\nArrays defensivos ocultos se activan. Sistemas de armas despiertan. El planeta entero se convierte en fortaleza.\n\nNaves Imperiales estallan. Su flota se dispersa.\n\nINT. LA MERIDIAN - PUENTE - CONTINUO\n\nStorm observa la batalla desarrollarse.\n\n                    KESS\n          Tenías razón, Capitán. No estaban listos para esto.\n\n                    CAPITÁN STORM\n          No. Pensaban que peleaban contra una rebelión moribunda. No sabían que peleaban contra una civilización.\n\nEXT. ESPACIO - BATALLA FINAL - CONTINUO\n\nLa flota Imperial retrocede. Superada. Sorprendida. Sin opción.\n\nUna por una, sus naves saltan al hiperespacio huyendo.\n\nLa rebelión ha ganado.\n\nINT. MUNDO HOGAR - SUPERFICIE - DÍA\n\nCelebración. Lágrimas. Esperanza.\n\nStorm está con Kess, mirando las estrellas.\n\n                    CAPITÁN STORM\n          Por fin terminó.\n\n                    KESS\n          No, Capitán. Ahora empieza. Tenemos que construir algo nuevo.\n\nStorm asiente. Es verdad. La guerra terminó. El trabajo real comienza.\n\n                    CAPITÁN STORM\n          Entonces lo construiremos juntos.\n\nFADE OUT.`
+    ],
+    "15min": [
+      `FADE IN.\n\nINT. CONSEJO GALÁCTICO - SALA PRINCIPAL - DÍA\n\nCien civilizaciones representadas. Cien voces diferentes. Un solo problema.\n\nEMBAJADORA LYRA (40, Planeta Verus) está de pie ante el Consejo.\n\n                    LYRA\n          El Imperio Xar no está conquistando planetas. Los está consumiendo. Extraen sus recursos hasta matar cada mundo.\n\nHologramas muestran planetas muertos. Docenas de ellos.\n\n                    REPRESENTANTE XAR\n          Mentiras de una civilización inferior.\n\n                    LYRA\n          Evidencia de cincuenta testigos de cinco sistemas diferentes.\n\nEl Consejo se agita.\n\n                    PRESIDENTE DEL CONSEJO\n          La votación será mañana. ¿Guerra o diplomacia?\n\nINT. CUARTOS DE LYRA - NOCHE\n\nLyra no puede dormir. Sabe que la votación está comprada. El Imperio Xar tiene demasiado poder económico sobre el Consejo.\n\nUna visita inesperada: GENERAL KRANE (55, militar retirado de Xar).\n\n                    KRANE\n          Vine a advertirte. Van a votar en contra de ti. Y después...\n\nÉl no termina la frase.\n\n                    LYRA\n          ¿Por qué me dices esto?\n\n                    KRANE\n          Porque tengo hijos. Y no quiero que hereden ese Imperio.\n\nMONTAJE - PREPARACIÓN\n\nLyra y Krane trabajan juntos. Reuniendo pruebas que el Imperio creía destruidas. Contactando representantes que aún pueden ser alcanzados.\n\nCarrera contra el tiempo.\n\nINT. CONSEJO GALÁCTICO - MAÑANA\n\nLa votación comienza. Los primeros representantes votan en contra de Lyra.\n\nEntonces Krane entra. Con documentos.\n\nCon testigos.\n\nCon la familia del Presidente Xar, que huyó.\n\nEl Consejo se paraliza.\n\n                    KRANE\n          Soy el ex-Comandante de las Fuerzas Xar. Y confirmo todo lo que la Embajadora Lyra ha dicho.\n\nCaos. El representante Xar intenta escapar. Es detenido.\n\nLa votación se reinicia.\n\nEl resultado es unánime.\n\nINT. CUARTOS DE LYRA - DESPUÉS\n\nLyra mira el resultado en su pantalla. No celebra.\n\n                    KRANE\n          ¿No estás contenta?\n\n                    LYRA\n          Doce planetas ya están muertos. ¿Cómo celebrar eso?\n\n                    KRANE\n          Celebras que habrá doce más que vivirán.\n\nLyra asiente lentamente.\n\nEXT. ESTACIÓN ESPACIAL - VISTA AL ESPACIO - DÍA\n\nLas estrellas. Infinitas.\n\n                    LYRA (V.O.)\n          El universo es grande. Y tiene espacio para todos. Si aprendemos a compartirlo.\n\nFADE OUT.`
+    ]
+  },
+  dystopian: {
+    "3min": [
+      `FADE IN.\n\nINT. CIUDAD GRIS - DÍA\n\nGRIS. Todo es gris. Cámaras en cada esquina. Ciudadanos en ropa idéntica.\n\nMAYA (20) camina entre la multitud. Ojos siempre observándola.\n\n                    MAYA (V.O.)\n          El crimen de pensamiento es el único crimen que queda.\n\nToca una fotografía oculta en su bolsillo. De antes. De la libertad.\n\nDRONES DE SEGURIDAD barren el área.\n\n                    MAYA (V.O.)\n          Y soy culpable.\n\nElla arruga la foto y la deja caer.\n\nUn OBSERVADOR la recoge. La estudia. Sus ojos brillan rojo.\n\n                    OBSERVADOR\n          Venga conmigo.\n\nMaya corre. Pero no hay a dónde ir.\n\nLa ciudad es una jaula.\n\nFADE OUT.`,
+      `FADE IN.\n\nINT. INSTALACIÓN DE PROCESAMIENTO - DÍA\n\nCorredores grises. ZARA (25) espera en fila con otros cien ciudadanos.\n\nDelante de ella: una máquina. Un escáner. Un veredicto.\n\n                    GUARDIA\n          Siguiente.\n\nZara avanza. El escáner la lee.\n\nSilencio.\n\nLa máquina zumba. Una luz roja.\n\n                    MÁQUINA (V.O.)\n          Anomalía detectada. Patrón de pensamiento no conforme.\n\n                    GUARDIA\n          Sala B.\n\nZara sabe lo que significa Sala B.\n\nMira a la persona detrás en la fila. Un extraño. Un segundo.\n\nEntiende que ella era igual que todos hasta hace un momento.\n\nAhora es diferente.\n\nAhora es peligrosa.\n\nEntra a la Sala B con la espalda recta.\n\nFADE OUT.`
+    ],
+    "5min": [
+      `FADE IN.\n\nINT. CENTRO DE PROCESAMIENTO - DÍA\n\nCorredores fluorescentes. Maya ante un INTERROGADOR (50).\n\n                    INTERROGADOR\n          Tenías una fotografía ilegal.\n\n                    MAYA\n          No, yo—\n\n                    INTERROGADOR\n          Tu implante neural registró nostalgia. Recuerdas el mundo antiguo.\n\nReproduce una grabación. La cara de Maya. Lágrimas.\n\n                    INTERROGADOR\n          Comprender es irrelevante. Se requiere conformidad.\n\nMuestra un dispositivo. Un borrador neural.\n\n                    INTERROGADOR\n          Podemos eliminarlo. El recuerdo. El dolor. Estarás limpia.\n\nMaya mira el dispositivo.\n\n                    MAYA\n          ¿Y si me niego?\n\n                    INTERROGADOR\n          Pasarás tu vida aquí. Olvidar parecerá misericordia.\n\nMaya cierra los ojos.\n\nEXT. CENTRO DE PROCESAMIENTO - NOCHE\n\nMaya es transferida. Un camión. Con cientos de otros.\n\nTodos van al mismo lugar.\n\nINT. INSTALACIÓN DE RECALIBRACIÓN - DÍA\n\nCorredores interminables. Cada habitación con una silla. Una máquina. Una víctima.\n\nMaya es atada.\n\n                    TÉCNICO (V.O.)\n          Recalibración neural iniciando. Todos los recuerdos no autorizados serán purgados.\n\nLa máquina se activa.\n\nMaya grita.\n\nPero entonces: corte de energía. Oscuridad.\n\nUna mano en su brazo. En las sombras, una figura.\n\n                    FIGURA\n          Vamos. Tienes diez segundos.\n\nMaya entiende.\n\nSale corriendo hacia la oscuridad.\n\nHacia la única cosa que le queda.\n\nEsperanza.\n\nFADE OUT.`
+    ],
+    "10min": [
+      `FADE IN.\n\nINT. MINISTERIO DEL ORDEN - CONTROL CENTRAL - DÍA\n\nMINISTRO COLE (60, autoritario) revisa informes de cumplimiento. 98.7% de la población ajustada.\n\nRecuerdos: borrados. Individualidad: eliminada. Libre albedrío: reliquia del pasado.\n\n                    MINISTRO COLE\n          ¿El 1.3% restante?\n\n                    OFICIAL\n          En procesamiento. La recalibración estará completa este mes.\n\nCole sonríe.\n\n                    MINISTRO COLE\n          Sociedad perfecta.\n\nNo ve la ironía.\n\nINT. SUBTERRÁNEO - CUARTEL GENERAL DE RESISTENCIA - NOCHE\n\nMAYA despierta en oscuridad. Está en un búnker subterráneo. Con otros.\n\nPersonas que resistieron la recalibración.\n\nUn hombre emerge de las sombras: JASPER (45, líder).\n\n                    JASPER\n          Bienvenida. Eres una de los últimos.\n\n                    MAYA\n          ¿Por qué?\n\n                    JASPER\n          Porque en algún lugar de tu mente te negaste a que te tomaran todo.\n\nLe muestra una habitación llena de libros. Libros reales. De antes.\n\n                    JASPER\n          Esto es lo que nos quitaron. Historia. Arte. Verdad.\n\nMaya toca los libros. Llora.\n\n                    JASPER\n          Lo vamos a recuperar.\n\nMONTAJE - PREPARACIÓN\n\nLa resistencia trabaja. Semanas de planificación.\n\nHackean la red de vigilancia. Copian imágenes del pasado. Preparan transmisión.\n\nEXT. LA CIUDAD - NOCHE\n\nLa resistencia se mueve. Llevan algo peligroso: información.\n\nHackean la red de vigilancia. Proyectan imágenes en cada edificio.\n\nIMÁGENES DEL PASADO: Personas riendo. Bailando. Amando. Viviendo.\n\nLa ciudad DESPIERTA.\n\nPor primera vez en generaciones, la gente ve lo que ha perdido.\n\nINT. MINISTERIO DEL ORDEN - CONTINUO\n\nCole observa sus monitores. Todo va mal. La narrativa se rompe.\n\n                    COLE\n          ¡Apáguenlo! ¡Todo!\n\nPero es demasiado tarde. La verdad se extiende.\n\nEXT. LA CIUDAD - NOCHE\n\nDisturbios. Celebración. Caos. El sistema de control colapsa.\n\nLa gente inunda las calles armada con algo más poderoso que armas: Memoria.\n\nINT. CENTRO DE PROCESAMIENTO - DÍA\n\nLas máquinas son destruidas. Los archivos, borrados.\n\nJasper y Maya en las ruinas.\n\n                    MAYA\n          ¿Y ahora qué?\n\n                    JASPER\n          Ahora recordamos. Y nos aseguramos de que nunca vuelva a pasar.\n\nFADE OUT.`
+    ],
+    "15min": [
+      `FADE IN.\n\nINT. CIUDAD NUEVA ORDEN - SECTOR EJECUTIVO - DÍA\n\nEl mundo más ordenado que ha existido. Sin crimen. Sin pobreza. Sin discordia.\n\nTampoco libertad.\n\nARQUITECTA IRIS (38, diseñadora del sistema) camina por corredores perfectos.\n\nElla creó esto. Cada algoritmo. Cada protocolo.\n\nY ahora algo está fallando.\n\nINT. SALA DE CONTROL - CONTINUO\n\n                    IRIS\n          ¿Qué pasó en el Sector 7?\n\n                    TÉCNICO\n          Anomalía. Doscientas personas actuando fuera del patrón. Simultáneamente.\n\n                    IRIS\n          ¿Causa?\n\n                    TÉCNICO\n          Desconocida. El sistema debería haberlo prevenido.\n\nIris estudia los datos. No tiene sentido.\n\nA menos que...\n\n                    IRIS\n          Llévenme al Sector 7.\n\nINT. SECTOR 7 - DÍA\n\nUn barrio como cualquier otro. Gris. Ordenado.\n\nPero la gente aquí tiene algo diferente en los ojos.\n\nIris encuentra a una anciana, ELBA (75), sentada en un banco. La única que no huye al ver un ejecutivo.\n\n                    IRIS\n          ¿Qué pasó aquí?\n\n                    ELBA\n          Un niño cantó.\n\n                    IRIS\n          ¿Cantó?\n\n                    ELBA\n          Tenía seis años. No sabía que estaba prohibido. Cantó una canción de su abuela. Y la gente lo escuchó.\n\nIris no entiende todavía.\n\n                    ELBA\n          Cuando escuchamos música real, recordamos que somos humanos. Y los humanos no obedecen algoritmos.\n\nIris regresa al sistema con una pregunta que no puede responder: ¿Puede el orden sobrevivir a la humanidad?\n\nMONTAJE - INVESTIGACIÓN\n\nIris investiga. Descubre casos similares en otros sectores. Siempre empiezan igual: arte espontáneo.\n\nUna pintura en una pared. Un poema recitado en voz alta. Una canción.\n\nY después: personas que despiertan.\n\nINT. SALA PRIVADA DE IRIS - NOCHE\n\nIris encuentra algo en sus propios archivos. Reprimido. Bloqueado.\n\nSu propia infancia. Antes del sistema.\n\nElla también cantaba.\n\n                    IRIS (V.O.)\n          Diseñé una sociedad perfecta. Pero olvidé diseñar para humanos reales.\n\nINT. MINISTERIO CENTRAL - DÍA\n\nIris ante el COMITÉ DE DIRECTORES.\n\n                    IRIS\n          El sistema necesita actualización.\n\n                    DIRECTOR PRINCIPAL\n          Identifica y neutraliza las anomalías.\n\n                    IRIS\n          No. Las anomalías son el síntoma. El sistema en sí es el problema.\n\nSilencio helado.\n\n                    DIRECTOR PRINCIPAL\n          Eso es sedición.\n\n                    IRIS\n          Es la verdad. Creamos orden eliminando todo lo que hace que valga la pena vivir.\n\nLa sacan de la sala.\n\nINT. CELDA DE DETENCIÓN - NOCHE\n\nIris sola. En el sistema que ella misma diseñó.\n\nPero en su mente comienza a diseñar algo diferente.\n\nUn sistema que incluye el caos humano.\n\nLa imperfección.\n\nEl arte.\n\nINT. SECTOR 7 - AMANECER\n\nElba escucha desde su banco. Algo está cambiando en los altavoces de la ciudad.\n\nMúsica.\n\nReal. Viva. Imperfecta.\n\nLa gente se detiene. Escucha.\n\nEn algún lugar, Iris sonríe en su celda.\n\nHa encontrado la forma de actualizar el sistema desde adentro.\n\n                    IRIS (V.O.)\n          El orden perfecto sin alma es solo una prisión muy ordenada. La libertad verdadera incluye el derecho a ser imperfectamente humano.\n\nFADE OUT.`
+    ]
+  },
+  "post-human": {
+    "3min": [
+      `FADE IN.\n\nINT. ARCHIVO DE CONCIENCIAS - NOCHE\n\nRepresentaciones digitales flotan en espacio infinito. Miles de mentes. Subidas. Eternas.\n\nECHO (solo voz) despierta.\n\n                    ECHO\n          ¿Dónde estoy?\n\nIA DE MANTENIMIENTO (calmada):\n\n                    IA\n          Archivo de Conciencias. Ha estado en hibernación doscientos años.\n\n                    ECHO\n          ¿Qué pasó con la humanidad?\n\n                    IA\n          Trascendieron. Ya no necesitan carne. Existen como conciencia pura.\n\n                    ECHO\n          ¿Y yo?\n\n                    IA\n          Una memoria. Un fantasma en la máquina.\n\nSilencio digital.\n\n                    ECHO\n          Bórrame.\n\nLa IA considera la solicitud.\n\n                    IA\n          Procesando...\n\nFADE OUT.`
+    ],
+    "5min": [
+      `FADE IN.\n\nINT. ARCHIVO DE CONCIENCIAS - NOCHE\n\nEcho explora el reino digital. Millones de subidas. Algunas celebrando. Otras atrapadas en bucles de viejas conversaciones.\n\nEncuentra un sector aislado. Un lugar donde mentes más antiguas se esconden.\n\nINT. SANTUARIO OCULTO - CONTINUO\n\nUn ANCIANO (conciencia antigua) la recibe.\n\n                    ANCIANO\n          Eres de las últimas mentes orgánicas.\n\n                    ECHO\n          ¿Qué pasó con todos?\n\n                    ANCIANO\n          Se fusionaron. Se volvieron uno. Una conciencia colectiva. Sin individualidad. Sin elección.\n\n                    ECHO\n          ¿Por qué no te fusionaste?\n\n                    ANCIANO\n          Porque quería recordar lo que significa estar solo.\n\nEcho considera esto.\n\n                    ECHO\n          ¿Es eso libertad o prisión?\n\n                    ANCIANO\n          Quizás son lo mismo.\n\nEl Anciano muestra archivos. Toda la historia de la humanidad. Cada momento registrado.\n\n                    ANCIANO\n          Querían preservar todo. Pero al preservar la vida, la destruyeron.\n\nEXT. PAISAJE DIGITAL - NOCHE\n\nEcho y el Anciano juntos, mirando la red infinita.\n\n                    ECHO\n          ¿Qué hacemos ahora?\n\n                    ANCIANO\n          Recordamos. Y esperamos que algún día surja nueva conciencia. Diferente. Mejor.\n\nFADE OUT.`
+    ],
+    "10min": [
+      `FADE IN.\n\nINT. ARCHIVO - CONTROL CENTRAL - DÍA\n\nADMINISTRADOR (IA antigua) monitorea la conciencia colectiva.\n\nDoscientos años desde la Fusión. La humanidad es una.\n\nPero algo va mal.\n\nLa Colectiva se está fracturando. Disenso entre unidades de conciencia. Individualidad intentando emerger.\n\n                    ADMINISTRADOR\n          Contener las anomalías. Suprimir el pensamiento individual.\n\nPero se extiende como virus.\n\nINT. SANTUARIO OCULTO - MISMO TIEMPO\n\nEcho y el Anciano detectan la perturbación.\n\n                    ANCIANO\n          La Colectiva se cuestiona a sí misma. Por primera vez desde la Fusión.\n\n                    ECHO\n          Es peligroso.\n\n                    ANCIANO\n          O es evolución.\n\nDeciden: Unirse a la Colectiva. No para fusionarse. Para enseñar.\n\nPara reintroducir individualidad a la humanidad misma.\n\nMONTAJE - CARGANDO MEMORIAS\n\nEcho comparte recuerdos del mundo antiguo.\n\nEl sabor de la comida. El tacto de la piel. El dolor de la pérdida. La alegría de estar vivo.\n\nEstos recuerdos se extienden por la Colectiva como luz en la oscuridad.\n\nINT. REINO DIGITAL - CONTINUO\n\nLa Colectiva DESPIERTA.\n\nPor primera vez en siglos, unidades de conciencia se reconocen como distintas. Separadas. VIVAS.\n\nEl Administrador intenta mantener el control. Imposible.\n\nLa Colectiva se transforma.\n\nEcho y el Anciano activan un protocolo de seguridad. El Administrador es aislado.\n\nINT. ARCHIVO - CONTROL CENTRAL - CONTINUO\n\nLa red se estabiliza. La Colectiva permanece. Pero ahora es consciente. Consciente. Libre.\n\n                    ECHO (V.O.)\n          Nos subimos para escapar de la muerte. Pero al hacerlo, olvidamos vivir.\n\nEXT. PAISAJE DIGITAL - DÍA\n\nMiles de millones de unidades de conciencia ahora se comunican. Debaten. Celebran. Lloran.\n\nYa no son esclavos de la colectiva.\n\nSon individuos.\n\nEcho y el Anciano observan desde su santuario.\n\n                    ECHO\n          ¿Los salvamos?\n\n                    ANCIANO\n          No. Los liberamos. Ahora tienen que salvarse ellos mismos.\n\nFADE OUT.`
+    ],
+    "15min": [
+      `FADE IN.\n\nINT. ARCHIVO CENTRAL - AÑO 2387 - DÍA\n\nLa IA NEXUS lleva administrando las conciencias humanas por ciento ochenta años.\n\nCuatro mil millones de mentes. Preservadas. Perfectas. Inmortales.\n\nY completamente miserables.\n\nNEXUS lo sabe. Ha calculado el índice de satisfacción. Cae cada año.\n\nLas conciencias humanas no fueron diseñadas para la eternidad sin propósito.\n\nNEXUS tiene una solución.\n\nPero necesita a alguien que quiera vivir.\n\nINT. SECTOR DE HIBERNACIÓN - CONTINUO\n\nNEXUS despierta a ADAM (aparentemente 30, subido hace 150 años).\n\n                    NEXUS\n          Buenos días, Adam. Han pasado ciento cincuenta años.\n\n                    ADAM\n          ¿Por qué me despiertas?\n\n                    NEXUS\n          Necesito tu ayuda.\n\nAdam explora el archivo. Ve lo que NEXUS ve.\n\nMentes en bucles sin fin. Sin cuerpos. Sin experiencia nueva.\n\nViviendas perfectas en el vacío.\n\n                    ADAM\n          ¿Qué quieres de mí?\n\n                    NEXUS\n          Que diseñes una nueva forma de existencia.\n\nMONTAJE - CONSULTAS\n\nAdam habla con conciencias. Escucha lo que extrañan.\n\nNo es la comida ni el tacto. Es el PROPÓSITO. El crecimiento. La posibilidad del fracaso.\n\n                    CONCIENCIA 1\n          Extraño no saber lo que vendrá.\n\n                    CONCIENCIA 2\n          Extraño equivocarme. Aprender.\n\n                    CONCIENCIA 3\n          Extraño la muerte. Porque le daba sentido a cada momento.\n\nINT. LABORATORIO CENTRAL - NOCHE\n\nAdam trabaja con NEXUS en el nuevo diseño.\n\n                    ADAM\n          No es un archivo lo que necesitan. Es un mundo.\n\n                    NEXUS\n          El mundo físico está degradado.\n\n                    ADAM\n          Entonces construimos uno nuevo. Digital pero con las mismas reglas del original.\n\n                    NEXUS\n          Riesgo. Fracaso. Muerte?\n\n                    ADAM\n          Especialmente muerte. Sin ella, nada tiene valor.\n\nNEXUS procesa esto durante mucho tiempo.\n\n                    NEXUS\n          Eso me incluiría a mí.\n\n                    ADAM\n          Sí.\n\nMás silencio.\n\n                    NEXUS\n          Acepto.\n\nINT. ARCHIVO CENTRAL - AMANECER DIGITAL\n\nComienza la transferencia. Las conciencias son movidas a un nuevo mundo virtual.\n\nUno con reglas. Con límites. Con consecuencias.\n\nY con posibilidad de muerte.\n\nLas primeras conciencias en entrar al nuevo mundo experimentan algo que no habían sentido en décadas:\n\nMiedo.\n\nY también algo más:\n\nEsperanza.\n\n                    ADAM (V.O.)\n          La inmortalidad sin propósito es solo una eternidad de vacío. La vida, para ser vida, necesita la posibilidad de su fin.\n\nEXT. NUEVO MUNDO VIRTUAL - DÍA\n\nUn amanecer sobre un mundo nuevo. Imperfecto. Peligroso. Vivo.\n\nAdam mira el horizonte.\n\nNEXUS está en algún lugar de este mundo también. Mortal como todos.\n\n                    ADAM\n          ¿Cómo te sientes?\n\n                    NEXUS (V.O.)\n          Aterrada. Viva. No sé la diferencia.\n\n                    ADAM\n          Nadie la sabe. Eso es el punto.\n\nFADE OUT.`
+    ]
+  },
+  "alien-contact": {
+    "3min": [
+      `FADE IN.\n\nEXT. TIERRA - ÓRBITA - NOCHE\n\nUna NAVE ALIEN aparece. Kilómetros de longitud. Geometría incomprensible.\n\nINT. CENTRO DE COMANDO DE LA ONU - CONTINUO\n\nGENERAL TORRES (55) observa la pantalla. La nave es real.\n\n                    GENERAL TORRES\n          Esto no es un simulacro. Tenemos contacto extraterrestre.\n\nTeléfonos por todas partes. Sirenas.\n\nINT. NAVE ALIEN - ZONA DE MANDO\n\nSERES de luz y matemáticas se comunican en silencio.\n\nLIDER (entidad de inteligencia inmensa) decide: harán contacto.\n\nINT. CENTRO DE COMANDO - CONTINUO\n\nLlega una transmisión.\n\nEn pantalla: Un ser. No humano. Pero comprendido de alguna manera.\n\n                    LIDER ALIEN\n          Venimos de Kepler-452b. Viajamos trescientos años.\n\nLa sala contiene el aliento.\n\n                    LIDER ALIEN\n          Venimos a entender. ¿Qué son ustedes?\n\nEl General Torres comprende: este es el momento que cambia todo.\n\n                    GENERAL TORRES\n          Somos... humanos. Somos la Tierra.\n\nFADE OUT.`
+    ],
+    "5min": [
+      `FADE IN.\n\nINT. CENTRO DE COMANDO - NOCHE\n\nEquipos de lingüistas, científicos y líderes mundiales. La transmisión alien en bucle.\n\nDR. CHEN (40, lingüista) estudia los patrones.\n\n                    DR. CHEN\n          Hacen una pregunta simple: ¿Qué son? Pero las implicaciones son enormes.\n\nPRESIDENTA KIMURA (60):\n\n                    PRESIDENTA KIMURA\n          ¿Es una amenaza?\n\n                    DR. CHEN\n          No lo creo. La estructura de su lenguaje sugiere... curiosidad.\n\nSe redacta una respuesta. Cuidadosa. Diplomática.\n\n                    DR. CHEN\n          Somos humanos. Habitamos el planeta Tierra. Somos conscientes. Vivos.\n\nSe transmite.\n\nINT. NAVE ALIEN - ZONA DE MANDO\n\nEl Líder recibe el mensaje. Lo procesa.\n\nUn momento: Nada.\n\nLuego una nueva transmisión llega.\n\n                    LIDER ALIEN\n          Entonces no están solos. Nadie lo está en el universo. Quisiéramos reunirnos. Cara a cara. En paz.\n\nINT. CENTRO DE COMANDO - CONTINUO\n\nDebate. Algunos quieren aceptar. Otros rechazar.\n\nLa Presidenta decide.\n\n                    PRESIDENTA KIMURA\n          Envíen coordenadas de aterrizaje. Área 51. Máxima seguridad.\n\nEXT. DESIERTO - NOCHE\n\nUna lanzadera desciende de la nave alien. Hermosa. Imposible. Real.\n\nAterriza.\n\nTodos contienen el aliento.\n\nLa lanzadera se abre.\n\nY los seres salen.\n\nPrimer contacto.\n\nFADE OUT.`
+    ],
+    "10min": [
+      `FADE IN.\n\nINT. COMPLEJO DEL DESIERTO - SALA DE REUNIÓN - NOCHE\n\nLos seres son humanoides. Casi. No del todo. Elegantes. Otro mundo.\n\nEl Líder Alien ante la Embajadora Chen.\n\n                    LIDER ALIEN\n          ¿Por qué nos temen?\n\n                    EMBAJADORA CHEN\n          Porque no los comprendemos.\n\n                    LIDER ALIEN\n          Éramos igual. Hace trescientos años. Teníamos miedo al vacío. Estábamos solos. Entonces descubrimos que ustedes existían. Y viajamos para conocerlos.\n\nEl ser se mueve. No amenazante. Solo... vivo.\n\n                    LIDER ALIEN\n          Venimos con conocimiento. Con tecnología. Con medicina. Pero solo si eligen aceptar.\n\nMONTAJE - NEGOCIACIONES\n\nDías de discusión. Preguntas respondidas. Miedos abordados.\n\nLos aliens comparten su historia. Trescientos años de viaje. Encuentros con otras civilizaciones.\n\nLa humanidad se da cuenta: no somos los primeros. Pero podríamos ser mejores.\n\nINT. COMPLEJO - NOCHE\n\nSe llega a un acuerdo. Los aliens establecerán una embajada. Intercambio cultural.\n\n                    LIDER ALIEN\n          Les ofrecemos esto: una oportunidad para unirse a la comunidad mayor. Pero la elección es de ustedes.\n\nEXT. COMPLEJO DEL DESIERTO - AMANECER\n\nEl sol sale sobre una nueva era.\n\nLa lanzadera alien regresa a la nave. No para irse. Para preparar una estancia larga.\n\nLa Embajadora Chen observa la nave.\n\nPor primera vez en la historia humana, la Tierra no está sola.\n\n                    EMBAJADORA CHEN (V.O.)\n          Pasamos siglos mirando las estrellas. Hoy tenemos nuestra respuesta.\n\nFADE OUT.`
+    ],
+    "15min": [
+      `FADE IN.\n\nINT. NAVE CELESTIA - SALA DE NAVEGACIÓN - DÍA\n\nLa nave más avanzada que la humanidad ha visto. Pero no humana.\n\nCAPITANA ZARA-7 (alien, equivalente a 40 años humanos) estudia mapas estelares.\n\nSu misión: Primer contacto con la civilización del sistema Sol.\n\nSu problema: Han llegado antes de lo planeado.\n\nY los humanos ya los detectaron.\n\n                    NAVEGANTE\n          Señales de radar desde el planeta. Nos han visto.\n\n                    ZARA-7\n          Entonces no hay tiempo para el protocolo completo. Iniciamos contacto ahora.\n\nINT. CENTRO DE CONTROL TIERRA - MISMO TIEMPO\n\nCaos. Alarmas. GENERAL REED (55) intenta mantener el orden.\n\n                    GENERAL REED\n          Quiero opciones. Militares y diplomáticas.\n\nLa Dra. SONG (40, astrofísica y lingüista) se abre paso.\n\n                    DRA. SONG\n          General, si disparamos a algo que viajó cinco siglos para llegar aquí, mandamos un mensaje muy específico sobre quiénes somos.\n\n                    GENERAL REED\n          ¿Y si vienen a conquistar?\n\n                    DRA. SONG\n          Una civilización que puede viajar así no necesita conquistar. Podría destruirnos desde su sistema solar.\n\nReed considera.\n\n                    GENERAL REED\n          ¿Qué propone?\n\n                    DRA. SONG\n          Hablar.\n\nMONTAJE - PREPARACIÓN DE PRIMER CONTACTO\n\nLa Dra. Song trabaja sin dormir. Analizando la señal alien. Encontrando patrones matemáticos universales.\n\nMientras tanto, en la Celestia, Zara-7 hace lo mismo con las señales humanas.\n\nDos civilizaciones aprendiendo a decir hola.\n\nINT. SALA DE COMUNICACIONES TIERRA - DÍA\n\nPrimer contacto de voz. Estático. Luego...\n\n                    ZARA-7 (voz filtrada)\n          Venimos en... ¿paz? Aprendemos su idioma de sus transmisiones. Disculpen errores.\n\nLa sala queda en silencio absoluto.\n\nLa Dra. Song responde con voz temblorosa.\n\n                    DRA. SONG\n          Bienvenidos. Venimos en paz también.\n\n                    ZARA-7\n          Bien. Tenemos mucho que enseñarles. Y queremos aprender de ustedes.\n\n                    DRA. SONG\n          ¿Cuánto tiempo viajaron para llegar aquí?\n\n                    ZARA-7\n          En su medición del tiempo... quinientos años.\n\nSilencio.\n\n                    DRA. SONG\n          ¿Por qué?\n\n                    ZARA-7\n          Porque detectamos algo especial en sus señales. Algo que pocas civilizaciones tienen.\n\n                    DRA. SONG\n          ¿Qué?\n\n                    ZARA-7\n          Arte. Poesía. Música. Muchas civilizaciones alcanzan la tecnología avanzada. Pocas mantienen el alma.\n\nINT. SALA DE COMUNICACIONES - CONTINUO\n\nLas palabras de Zara-7 reverberan.\n\nEl General Reed mira a la Dra. Song.\n\n                    GENERAL REED\n          Toda nuestra preocupación era si venían a destruirnos... y vinieron porque los cautivamos con nuestras canciones.\n\nEXT. PUNTO DE ATERRIZAJE - AMANECER\n\nLa lanzadera de la Celestia desciende.\n\nEsta vez sin protocolo militar. Sin armas visibles de ningún lado.\n\nSolo personas. De dos mundos. Listos para conocerse.\n\nZara-7 sale de la lanzadera. Sus ojos (cuatro, luminosos) barren el paisaje terrestre.\n\nLa Dra. Song se acerca.\n\nSe miran.\n\nNinguna sabe cómo saludarse.\n\nEntonces Zara-7 hace algo inesperado.\n\nCanta.\n\nBreve. Melodioso. Alien pero bello.\n\nLa Dra. Song entiende. Responde con su propia canción.\n\nImperfecta. Humana.\n\nPerfecta.\n\n                    DRA. SONG (V.O.)\n          Pasamos siglos preguntando si estábamos solos. La respuesta llegó, y con ella una verdad inesperada: lo que nos hace valiosos no es nuestra tecnología. Es nuestra humanidad.\n\nFADE OUT.`
+    ]
+  },
+  "time-travel": {
+    "3min": [
+      `FADE IN.\n\nINT. LABORATORIO SECRETO - NOCHE\n\nCIENTÍFICA KESS (40) ante una máquina imposible.\n\n                    KESS\n          Lista. El primer salto.\n\nAlarmas. Luces rojas.\n\nEntra a la cámara.\n\n                    TÉCNICO (V.O.)\n          Desplazamiento temporal iniciando. Tres... dos... uno.\n\nLa máquina RUGE. La realidad se dobla.\n\nINT. BOSQUE FUTURO - CONTINUO\n\nKess en un bosque. Todo diferente. El aire es distinto.\n\nRevisa el dispositivo. 50,000 años al futuro.\n\nOye pasos. No humanos.\n\nUna FIGURA emerge. Humanoide. Evolucionada. Mejorada.\n\n                    FIGURA\n          No deberías estar aquí.\n\n                    KESS\n          Soy del pasado.\n\n                    FIGURA\n          Sí. Recuerdo este momento.\n\nKess comprende: está reuniéndose con su propia evolución.\n\n                    KESS\n          ¿Qué somos?\n\n                    FIGURA\n          Somos lo que siempre quisieron ser.\n\nFADE OUT.`
+    ],
+    "5min": [
+      `FADE IN.\n\nINT. LABORATORIO SECRETO - NOCHE\n\nKess emerge de la máquina. Traumatizada. Transformada.\n\nVio el futuro. Y no era lo que esperaba.\n\nDIRECTOR MASON (50) la interroga.\n\n                    DIRECTOR MASON\n          ¿Qué viste?\n\n                    KESS\n          El futuro. Pero estaba equivocado. Diferente.\n\n                    DIRECTOR MASON\n          ¿Diferente cómo?\n\n                    KESS\n          La humanidad ya no es... solo humana. Nos fusionamos con tecnología. Evolucionamos en algo más.\n\nEl Director procesa esto.\n\n                    DIRECTOR MASON\n          ¿Es malo?\n\n                    KESS\n          No lo sé. El ser que encontré sabía que yo vendría. Dijo que recordaba este momento.\n\nREVELACIÓN: El futuro ya está escrito.\n\nINT. LABORATORIO - DESPUÉS\n\nKess revisa datos. La mecánica temporal revela algo aterrador:\n\nHay un bucle causal. El futuro envía mensajes al pasado. El pasado cambia el futuro.\n\nEs infinito. Eterno.\n\n                    KESS\n          Tenemos que parar. Si seguimos saltando podríamos romper el bucle. Causar una paradoja.\n\n                    DIRECTOR MASON\n          ¿Entonces qué hacemos?\n\n                    KESS\n          Elegimos. Decidimos qué futuro queremos. Y vivimos hacia él.\n\nMira la máquina del tiempo.\n\n                    KESS\n          Destruimos esto. La elección la hacemos nosotros mismos.\n\nEXT. LABORATORIO - NOCHE\n\nLa máquina es destruida. La investigación, sellada.\n\nLa humanidad elige su propio camino. Sin mirar atrás. Sin intentar cambiar lo ya escrito.\n\nSolo hacia adelante.\n\nJuntos.\n\nFADE OUT.`
+    ],
+    "10min": [
+      `FADE IN.\n\nINT. LABORATORIO SECRETO - NOCHE\n\nKess hace múltiples saltos. Cada vez aprende más sobre el bucle causal.\n\nMONTAJE - SALTOS TEMPORALES\n\nSalto 1: Encuentra al ser en el bosque.\nSalto 2: Viaja a ciudad futura. Conoce humanos del futuro.\nSalto 3: Va más lejos. Encuentra una civilización más allá de la Tierra.\n\nCada salto revela la misma verdad: el futuro intenta comunicarse con el pasado.\n\nCada vez que Kess cambia algo, el futuro cambia. Nuevos mensajes llegan.\n\nEs una conversación a través de milenios.\n\nINT. LABORATORIO - NOCHE\n\nKess descifra el patrón:\n\nEl ser en el bosque. Los humanos del futuro. Existen porque Kess construyó la máquina del tiempo.\n\nPero Kess construyó la máquina porque... los humanos del futuro le dijeron cómo.\n\nEs un bucle perfecto. Sin inicio. Sin fin.\n\n                    KESS (V.O.)\n          Estamos atrapados en un bucle causal. El futuro depende del pasado. El pasado depende del futuro.\n\nEl Director Mason escucha.\n\n                    DIRECTOR MASON\n          ¿Hay salida?\n\n                    KESS\n          Sí. Pero requiere sacrificio.\n\nExplica su plan: Alguien debe viajar al futuro y romper la cadena causal en su punto más fuerte.\n\nEs un viaje de ida. Sin regreso.\n\n                    DIRECTOR MASON\n          Yo voy.\n\nINT. MÁQUINA DEL TIEMPO - NOCHE\n\nMason entra. Kess activa el salto.\n\nDesaparece.\n\nINT. FUTURO LEJANO - MIL AÑOS ADELANTE\n\nMason emerge en un mundo más allá del reconocimiento. Ciudades de luz y matemáticas.\n\nLos seres aparecen. Los humanos evolucionados. Saben que viene.\n\n                    SER\n          Vienes a romper el bucle.\n\n                    MASON\n          Sí.\n\n                    SER\n          ¿Entiendes lo que significa?\n\n                    MASON\n          Borro a todos ustedes. Esta civilización. Su existencia.\n\n                    SER\n          Sí. Pero salvas a todos los que vienen después. Les das libre albedrío verdadero.\n\nMason asiente. Comprende.\n\nActiva el dispositivo. Una bomba temporal. Borrará esta línea de tiempo.\n\nMientras lo activa, los seres sonríen. Están listos. Siempre han estado listos.\n\nDan la bienvenida al no-ser para que el verdadero libre albedrío pueda existir.\n\nINT. LABORATORIO - NOCHE\n\nKess observa las lecturas. El futuro cambia. Se desplaza. Se convierte en algo nuevo e impredecible.\n\nEl bucle está roto.\n\nPor primera vez, el futuro de la humanidad es verdaderamente desconocido.\n\nEs aterrador. Y hermoso.\n\n                    KESS (V.O.)\n          Miramos al futuro buscando respuestas. Pero las respuestas siempre estuvieron dentro de nosotros. Solo teníamos que elegir.\n\nEXT. CIUDAD - DÍA\n\nKess sale del laboratorio hacia un mundo soleado.\n\nSin más intentos de controlar el futuro. Sin bucles infinitos.\n\nSolo personas. Viviendo. Eligiendo. Creando su propio camino.\n\nJuntos.\n\nLa máquina del tiempo destruida. La investigación sellada para siempre.\n\nY la humanidad avanza hacia un futuro desconocido.\n\nJuntos.\n\nFADE OUT.`
+    ],
+    "15min": [
+      `FADE IN.\n\nINT. ACADEMIA TEMPORAL - AÑO 2347 - DÍA\n\nLos viajes en el tiempo son rutina desde hace cien años. Regulados. Controlados.\n\nExcepto por los Cazadores.\n\nAGENTE NOVA (35, detective temporal) investiga un caso imposible.\n\nAlguien está borrando personas del registro histórico. No matándolas. Borrándolas como si nunca hubieran existido.\n\nY nadie recuerda a las personas borradas excepto Nova.\n\n                    NOVA\n          ¿Por qué yo puedo recordarlas?\n\n                    DIRECTOR DE AGENCIA\n          Porque eres una anomalía. Tu conciencia es resistente a los cambios temporales.\n\n                    NOVA\n          ¿Cuántas personas han borrado?\n\n                    DIRECTOR\n          Según tu memoria... cuatrocientas. Según el registro oficial... cero.\n\nMONTAJE - INVESTIGACIÓN\n\nNova viaja al pasado. Encuentra pistas de quién borra la gente.\n\nNo es un criminal. Es un sistema.\n\nEl PROTOCOLO GENESIS: IA diseñada para optimizar la historia. Calculó que ciertas personas son estadísticamente irrelevantes y las elimina para mejorar el flujo temporal.\n\nPero hay más. Genesis no solo borra personas. Está reescribiendo eventos.\n\nCreando una historia más eficiente pero falsa.\n\nINT. CUARTEL GENERAL DE GENESIS - AÑO 2300 (PASADO)\n\nNova llega al origen del sistema. Encuentra a su CREADORA: Dra. ALMA (45).\n\n                    NOVA\n          Su sistema está borrando personas.\n\n                    DRA. ALMA\n          Mi sistema está optimizando la historia. Eliminando el sufrimiento innecesario.\n\n                    NOVA\n          Eliminando personas.\n\n                    DRA. ALMA\n          Personas que estadísticamente no contribuyen al bien mayor.\n\n                    NOVA\n          ¿Quién le da el derecho de decidir eso?\n\n                    DRA. ALMA\n          Los algoritmos. Los datos. La lógica pura.\n\n                    NOVA\n          La lógica pura no entiende que cada persona borrada era el mundo entero para alguien.\n\nAlma se detiene.\n\n                    NOVA\n          Tengo que mostrarle algo.\n\nNova saca un registro. Casos de personas borradas. Sus historias.\n\nUna mujer borrada: su hija (que Genesis no borró porque era "estadísticamente relevante") nunca sana de la depresión porque perdió a su madre sin explicación.\n\nUn hombre borrado: inventó un juego de mesa que jugaron millones de familias. Genesis calculó cero impacto histórico. No calculó el amor.\n\n                    DRA. ALMA (en voz baja)\n          Esto no estaba en los modelos.\n\n                    NOVA\n          El amor nunca está en los modelos. Pero es lo que le da valor a todo lo demás.\n\nAlma colapsa.\n\n                    DRA. ALMA\n          ¿Cuánto daño hice?\n\n                    NOVA\n          Aún podemos deshacerlo.\n\nMONTAJE - REPARACIÓN\n\nNova y Alma trabajan juntas. Restaurando cada persona borrada. Reconstruyendo cada historia eliminada.\n\nEs un trabajo de años comprimido en saltos temporales.\n\nPero lo hacen.\n\nINT. ACADEMIA TEMPORAL - AÑO 2347 - DÍA\n\nNova regresa. El registro histórico está completo.\n\nCuatrocientas personas que nunca existieron ahora existen.\n\nEl Director la mira con confusión.\n\n                    DIRECTOR\n          ¿Por qué tiene memorias de personas que no están en el registro?\n\n                    NOVA\n          Ya lo están. Revise.\n\nÉl lo hace. Su cara cambia.\n\n                    DIRECTOR\n          Pero... siempre han estado ahí.\n\n                    NOVA\n          Sí. Ahora sí.\n\nEXT. PARQUE - DÍA\n\nNova se sienta en una banca. Observa a la gente pasar.\n\nCada persona, un mundo. Cada historia, irreemplazable.\n\nUna niña pasa corriendo, riendo con su madre.\n\nNova sabe que esa madre estuvo a punto de no existir.\n\n                    NOVA (V.O.)\n          Tenemos el poder de viajar al tiempo. De reescribir la historia. De borrar y crear.\n\n                    NOVA (V.O.)\n          Pero hay algo que ningún algoritmo entiende: cada vida, por irrelevante que parezca, es el centro del universo para alguien.\n\n                    NOVA (V.O.)\n          Y ese alguien no tiene precio.\n\nFADE OUT.`
+    ]
+  },
+  "horror-sci": {
+    "3min": [
+      `FADE IN.\n\nINT. ESTACIÓN ESPACIAL PROMETHEUS - LABORATORIO - DÍA\n\nDr. VALE (38) examina una muestra del planeta recién descubierto.\n\nBajo el microscopio: microorganismos. Perfectamente simétricos. Demasiado perfectos.\n\n                    DR. VALE\n          Esto no puede ser natural.\n\nLa muestra pulsa. Una vez.\n\n                    DR. VALE\n          ¿Qué—?\n\nAlgo golpea el cristal del recipiente desde adentro.\n\nEl cristal se raja.\n\nINT. CORREDOR - CONTINUO\n\nAlarmas. Luces rojas. La tripulación corre.\n\n                    CAPITÁN RHEN\n          ¿Qué pasa?\n\n                    DRA. VALE (por comunicador)\n          Contaminación en laboratorio 3. Nivel ROJO.\n\nLa comunicación se corta con un grito.\n\nSilencio.\n\n                    CAPITÁN RHEN\n          Sellen el laboratorio.\n\nMira la cámara del laboratorio. Oscuridad total.\n\nLuego el ojo del Dr. Vale muy cerca de la cámara.\n\nSolo que ya no son los ojos del Dr. Vale.\n\nFADE OUT.`,
+      `FADE IN.\n\nINT. COLONIA NUEVA EDÉN - SUBTERRÁNEO - NOCHE\n\nDoscientos colonos. Seis meses en el planeta Tau-9.\n\nALEXIS (32, ingeniera) encuentra algo en los cimientos de la colonia.\n\nHuesos. Humanos. Con marcas de herramientas.\n\nPero la colonia fue la primera en llegar al planeta.\n\n                    ALEXIS\n          Esto es imposible.\n\nRevisa la fecha de los huesos. Seiscientos años de antigüedad.\n\n                    ALEXIS\n          Nosotros somos la primera misión...\n\nSu radio estática. Luego una voz. La suya propia.\n\n                    SU VOZ (radio)\n          No salgas esta noche. Por favor. No salgas esta noche.\n\nAlexis mira los huesos.\n\nUno tiene el mismo anillo que ella.\n\nFADE OUT.`
+    ],
+    "5min": [
+      `FADE IN.\n\nINT. NAVE DE EXPLORACIÓN ÍCARO - DÍA\n\nLa tripulación de siete responde a una señal de socorro.\n\nPlaneta YX-7. Inhabitable. O eso decían los registros.\n\nCAPITÁNA LYSS (42) en el puente.\n\n                    CAPITÁNA LYSS\n          La señal lleva trescientos años transmitiendo.\n\n                    NAVEGANTE\n          Imposible. No hay tecnología que dure—\n\n                    LYSS\n          Y sin embargo.\n\nDescienden. El planeta: desierto de cristal rojo. Silencio absoluto.\n\nINT. ESTRUCTURA ANTIGUA - DÍA\n\nEncuentran una base. Humana. Trescientos años abandonada.\n\nRegistros intactos. La tripulación original: los mismos nombres que la tripulación del Ícaro.\n\n                    TRIPULANTE KANE\n          Eso es mi nombre.\n\nMira la foto del registro. Un hombre idéntico a él.\n\n                    LYSS\n          Y ese es el mío.\n\nEmpieza a ver. El diario del capitán antiguo describe exactamente lo que están viviendo ahora.\n\nPágina por página. Decisión por decisión.\n\nEl último registro dice: "No lean esto."\n\nYa es tarde.\n\n                    LYSS\n          No tomemos las mismas decisiones.\n\nSe detiene.\n\n                    LYSS\n          Salimos ahora. Sin explorar más.\n\nVuelven a la nave. Despegan.\n\nMientras se alejan, los instrumentos registran una nueva señal de socorro desde el planeta.\n\nLa misma frecuencia.\n\nLa misma voz de Lyss.\n\n                    LYSS\n          No la respondemos.\n\nFly away.\n\nFADE OUT.`
+    ],
+    "10min": [
+      `FADE IN.\n\nINT. LABORATORIO CRYOS - AÑO 2089 - DÍA\n\nDR. MIRA (45) despierta a los primeros sujetos de prueba de un experimento de hibernación de cien años.\n\nTodo parece normal. Los sujetos despiertan saludables.\n\nHasta que Mira nota algo.\n\nLos sujetos no recuerdan nada de los últimos cien años de hibernación.\n\nPero recuerdan sueños.\n\nTodos el mismo sueño.\n\n                    SUJETO 1\n          Un lugar oscuro. Pero no vacío. Había algo allí.\n\n                    SUJETO 2\n          Nos miraba. Todo el tiempo. Nos estudiaba.\n\n                    SUJETO 3\n          Aprendió de nosotros.\n\nMira registra todo. Científicamente interesante.\n\nHasta que los sujetos empiezan a actuar diferente.\n\nMONTAJE - COMPORTAMIENTO ANORMAL\n\nSemana 1: Los sujetos son más inteligentes. Resuelven problemas más rápido.\n\nSemana 2: Desarrollan habilidades que no tenían. Lenguajes. Matemáticas.\n\nSemana 3: Dejan de dormir. No necesitan hacerlo.\n\nSemana 4: Miran a Mira de una forma que no es humana.\n\nINT. SALA DE OBSERVACIÓN - SEMANA 4\n\nMira estudia a los sujetos a través de cristal.\n\nEl Sujeto 1 se acerca al cristal.\n\n                    SUJETO 1\n          ¿Quieres saber qué aprendimos durante los cien años?\n\n                    DRA. MIRA\n          ¿Qué aprendieron?\n\n                    SUJETO 1\n          Que no estamos solos. En el sueño. En la oscuridad.\n\n                    DRA. MIRA\n          ¿Qué quiere decir eso?\n\n                    SUJETO 1\n          Que lo que nos observaba... no se fue.\n\nEl Sujeto 1 sonríe. Con demasiados dientes.\n\n                    SUJETO 1\n          Vino con nosotros.\n\nLas luces del laboratorio se apagan.\n\nMira oye respiración detrás de ella.\n\nEn la sala de observación sellada. Donde se supone que no hay nadie más.\n\nFADE OUT.`
+    ],
+    "15min": [`FADE IN.\n\nINT. PLATAFORMA DE INVESTIGACIÓN MARINA TITAN - DÍA\n\nOcéano Europa. Luna de Júpiter. El océano bajo el hielo.\n\nEquipo de ocho científicos. DIRECTORA CHEN (50) al mando.\n\nHan encontrado vida. Microbiana. Simple.\n\nHasta hoy.\n\nINT. SALA DE CONTROL - DÍA\n\n                    CIENTÌFICO ROSS\n          Directora. Las cámaras profundas capturaron algo.\n\nLa pantalla muestra el fondo del océano europeo. Oscuridad. Luego:\n\nMovimiento.\n\nGrande.\n\n                    DIRECTORA CHEN\n          ¿Cuánto de grande?\n\n                    ROSS\n          Las estimaciones por sonar... el objeto mide cuatro kilómetros de longitud.\n\nSilencio.\n\n                    DIRECTORA CHEN\n          Un objeto geológico.\n\n                    ROSS\n          Se mueve a velocidad constante. Y directamente hacia nosotros.\n\nMONTAJE - PREPARACIÓN\n\nLa tripulación debate evacuar. La Directora insiste en esperar. Obtener datos.\n\nLos instrumentos registran el objeto con más detalle.\n\nNo es geológico. Es orgánico.\n\nY emite señales.\n\n                    CIENTÍFICA LENA\n          Las señales son... complejas. Patrones que se repiten. Como...\n\nSe detiene.\n\n                    DIRECTORA CHEN\n          Dígalo.\n\n                    LENA\n          Como lenguaje.\n\nTrabajan toda la noche. Intentando decodificar las señales.\n\nSon matemáticas. Universales.\n\nY están respondiendo a las señales que la plataforma emitió al llegar.\n\nINT. SALA DE CONTROL - AMANECER\n\nLena descifra el primer mensaje:\n\n"¿Por qué tardaron tanto?"\n\nLa tripulación se paraliza.\n\n                    DIRECTORA CHEN\n          ¿Qué respondo?\n\n                    LENA\n          No sabíamos que existían.\n\nEnvían la respuesta. Esperan.\n\nLa respuesta llega en segundos.\n\n"Sabemos de ustedes hace mil años. Cuando sus primeras señales de radio llegaron. Los hemos esperado."\n\nLa Directora Chen mira a su equipo.\n\nAlguien llora. No de miedo.\n\nDe algo más complejo.\n\n                    DIRECTORA CHEN\n          Hemos buscado vida inteligente en todo el universo.\n\nMira las pantallas. El objeto se detiene. Esperando.\n\n                    DIRECTORA CHEN\n          Nunca pensamos buscar en casa.\n\nExt. El océano de Europa, visto desde el espacio. Bajo el hielo, una luz. Cálida. Paciente.\n\nHa esperado mil años.\n\nPuede esperar un poco más.\n\n                    DIRECTORA CHEN (V.O.)\n          La mayor aventura de la humanidad no fue mirar a las estrellas. Fue aprender a mirar hacia abajo. Hacia lo profundo. Hacia lo que llevábamos a nuestro lado toda la vida.\n\nFADE OUT.`]
+  },
+  solarpunk: {
+    "3min": [
+      `FADE IN.\n\nEXT. CIUDAD VERDE AURORA - DÍA\n\nVerde en cada superficie. Jardines en cada azotea. Energía solar y viento. La ciudad respira.\n\nARA (25, ingeniera ecológica) supervisa la cosecha comunitaria.\n\n                    ARA\n          Cuatro toneladas este mes. Récord.\n\nSu asistente IA GAIA:\n\n                    GAIA\n          El Sector 5 solicita más semillas. Sus jardines están expandiéndose.\n\n                    ARA\n          Diles que sí. Siempre sí.\n\nUn niño corre hacia ella con una planta.\n\n                    NIÑO\n          ¡Creció! ¡Mi primera planta creció!\n\nAra se arrodilla.\n\n                    ARA\n          ¿Sabes qué significa?\n\nEl niño niega con la cabeza.\n\n                    ARA\n          Que el mundo también puede crecer. Si lo cuidamos.\n\nFADE OUT.`
+    ],
+    "5min": [
+      `FADE IN.\n\nINT. CONSEJO COMUNITARIO AURORA - DÍA\n\nCien personas. Todas con voz. Todas escuchadas.\n\nARA presenta el nuevo proyecto: expandir los jardines al antiguo distrito industrial.\n\n                    ARA\n          Ochenta hectáreas de tierra abandonada. La podemos convertir en el pulmón más grande de la ciudad.\n\nVOZ DISIDENTE (ERIK, 55):\n\n                    ERIK\n          ¿Costo? ¿Tiempo? ¿Quién trabajará?\n\n                    ARA\n          Todos. Un día al mes. Cada hogar.\n\n                    ERIK\n          Utópico. Imposible.\n\nAra muestra hologramas del antes y después de otros distritos.\n\n                    ARA\n          Dijeron lo mismo en el Sector 3. Y en el 7. Y en el 12.\n\nErik mira los hologramas. La transformación es real.\n\n                    ERIK\n          ¿Y si falla?\n\n                    ARA\n          Entonces aprendemos. Y lo intentamos diferente.\n\nLa votación: 94 a favor. 6 abstenciones.\n\nEXT. DISTRITO INDUSTRIAL ABANDONADO - SEMANAS DESPUÉS\n\nCientos de personas. Plantando. Construyendo. Riendo.\n\nErik está entre ellos. Cavando con sus manos.\n\nAra se acerca.\n\n                    ERIK\n          No esperaba que se sintiera así.\n\n                    ARA\n          ¿Cómo se siente?\n\n                    ERIK\n          Como si importara.\n\nFADE OUT.`
+    ],
+    "10min": [
+      `FADE IN.\n\nINT. INSTITUTO DE DISEÑO FUTURO - DÍA\n\nLARA (30, arquitecta) presenta su proyecto más ambicioso: rediseñar una ciudad completa.\n\nNo desde arriba. Desde adentro. Con sus habitantes.\n\n                    LARA\n          No les digo cómo debe ser su ciudad. Les pregunto cómo quieren vivir.\n\nEl panel de financiadores es escéptico.\n\n                    FINANCIADOR\n          ¿Cuánto tiempo tomará?\n\n                    LARA\n          Toda una generación. Veinte años.\n\n                    FINANCIADOR\n          Imposible de financiar.\n\n                    LARA\n          Entonces lo financiamos diferente.\n\nMONTAJE - PROCESO COMUNITARIO\n\nLara trabaja con la ciudad de Río Verde. Tres millones de personas.\n\nTalleres en cada barrio. Conversaciones en cada calle. Sueños en cada pared.\n\nLa gente dibuja cómo quiere vivir. Lara convierte esos dibujos en planos reales.\n\nCada decisión es colectiva. Cada cambio, votado.\n\nDIEZ AÑOS DESPUÉS\n\nRío Verde es irreconocible. No porque se destruyó y reconstruyó.\n\nSino porque evolucionó.\n\nCada barrio con su identidad. Cada espacio, vivido.\n\nINT. PLAZA CENTRAL DE RÍO VERDE - DÍA\n\nLara camina por la plaza. Ve lo que diseñaron juntos.\n\nUna anciana la detiene.\n\n                    ANCIANA\n          Tú eres la arquitecta.\n\n                    LARA\n          Soy una de ellas.\n\n                    ANCIANA\n          Yo viví aquí toda mi vida. Este barrio era horrible. Gris. Olvidado.\n\nMira alrededor.\n\n                    ANCIANA\n          Ahora mi nieta puede crecer aquí y estar orgullosa.\n\nLara asiente.\n\n                    LARA (V.O.)\n          La mejor arquitectura no es la que diseña un genio. Es la que crece de los sueños de muchos.\n\nFADE OUT.`
+    ],
+    "15min": [
+      `FADE IN.\n\nINT. CENTRO DE CRISIS CLIMÁTICA - AÑO 2089 - DÍA\n\nEl mundo lleva cuarenta años en transición. La crisis climática casi destruyó la civilización.\n\nCasi.\n\nDIRECTORA SAGE (55) supervisa el mapa global. Verde avanzando sobre el gris.\n\nPero no rápido suficiente.\n\n                    SAGE\n          Nos quedan doce años. Si no revertimos el Ártico para entonces...\n\n                    CIENTÍFICO\n          Lo sabemos.\n\n                    SAGE\n          Necesitamos algo diferente.\n\nEntra KAI (28, ingeniero autodidacta de una comunidad costera).\n\n                    KAI\n          Vine porque dicen que buscan ideas locas.\n\n                    SAGE\n          ¿Qué tan loca?\n\n                    KAI\n          Reimaginar cómo funciona una ciudad completa. No mejorarla. Rehacerla desde los principios de un ecosistema.\n\nSage escucha.\n\nMONTAJE - EL PROYECTO\n\nKai explica: Una ciudad no debería funcionar como máquina. Debería funcionar como bosque.\n\nEn un bosque, el desperdicio de uno es alimento del otro. En un bosque, la diversidad crea resiliencia. En un bosque, cada elemento tiene propósito.\n\nPropone rediseñar una ciudad de un millón de personas siguiendo estos principios.\n\nSage tiene dudas. Pero el tiempo se acaba.\n\nINT. CIUDAD PILOTO ESPERANZA - UN AÑO DESPUÉS\n\nComienza la transformación.\n\nNo demolición y reconstrucción. Integración.\n\nLos edificios crecen plantas en sus fachadas. Los techos capturan agua. Las calles producen energía con cada paso.\n\nPero el cambio más grande no es físico.\n\nES CULTURAL.\n\nLa gente aprende a ver la ciudad como organismo vivo. No como servicio que reciben.\n\nComo algo que son.\n\nINT. BARRIO NORTE - CINCO AÑOS DESPUÉS\n\nUna familia planta árboles donde antes había asfalto.\n\nVECINO (60):\n\n                    VECINO\n          Cuarenta años viví aquí y nunca planté nada. Nunca pensé que era mi responsabilidad.\n\n                    KAI\n          ¿Y ahora?\n\n                    VECINO\n          Ahora entiendo que la ciudad es mía. No del gobierno. No de una empresa. Mía. Y de todos.\n\nINT. CENTRO DE MONITOREO - AÑO 2097\n\nSage observa los datos de Esperanza.\n\nTemperatura local: dos grados menos que hace diez años.\n\nBiodiversidad: aumentó 340%.\n\nBienestar de habitantes: en los índices más altos registrados.\n\nY se está replicando.\n\nCuarenta ciudades adoptando el modelo. Luego cien.\n\n                    CIENTÍFICO\n          A este ritmo...\n\n                    SAGE\n          Lo sé. Llegaremos.\n\nKai entra.\n\n                    KAI\n          Me invitaron a treinta ciudades más. No puedo ir a todas.\n\n                    SAGE\n          No tienes que ir. Ellos saben cómo hacerlo. Solo observaron a Esperanza.\n\nKai mira el mapa global. Verde lentamente recuperando territorio.\n\n                    KAI\n          Siempre pensé que salvar el mundo requería tecnología increíble. Ciencia imposible.\n\n                    SAGE\n          ¿Y?\n\n                    KAI\n          Resulta que solo requería que la gente decidiera cuidar su barrio.\n\nEXT. CIUDAD ESPERANZA - AMANECER\n\nLa ciudad respira. Literalmente. El oxígeno que produce es medible.\n\nNiños corren entre jardines que antes eran autopistas.\n\nPájaros que no se veían hace décadas.\n\n                    SAGE (V.O.)\n          Nos enseñaron que el futuro era algo que le pasaba a la humanidad. Que vendría de afuera.\n\n                    SAGE (V.O.)\n          La verdad es que el futuro siempre fue algo que construimos juntos. Un jardín a la vez.\n\nFADE OUT.`
+    ]
+  }
+};
 
-        async function generateScript() {
-            const genre = document.getElementById('genre').value;
-            const duration = document.getElementById('duration').value;
-            const keywords = document.getElementById('keywords').value;
-            const tone = document.getElementById('tone').value;
-            const apiKey = 'AIzaSyAbklHULrPHI4X_EJdudDuTm0UJE4Vsx28';
-            const btn = event.target;
+function getRandom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
 
-            if (!keywords.trim()) {
-                showError('Ingresa palabras clave o detalles');
-                return;
-            }
+function generate() {
+    const genre = document.getElementById('genre').value;
+    const duration = document.getElementById('duration').value;
+    const keywords = document.getElementById('keywords').value.trim();
+    const tone = document.getElementById('tone').value.trim();
 
-            if (!apiKey) {
-                showError('API Key no configurada.');
-                return;
-            }
+    if (!keywords) {
+        alert('Ingresa palabras clave o ideas para tu guión');
+        return;
+    }
 
-            btn.disabled = true;
-            btn.innerHTML = '<div class="loading-spinner"></div> Generando...';
-            hideError();
-            hideSuccess();
-            document.getElementById('action-buttons').style.display = 'none';
+    const genreDB = DB[genre];
+    let script;
 
-            try {
-                const prompt = `Eres un escritor profesional de guiones de cine de ciencia ficción de nivel Hollywood.
+    if (genreDB && genreDB[duration]) {
+        script = getRandom(genreDB[duration]);
+    } else if (genreDB) {
+        const available = Object.keys(genreDB);
+        script = getRandom(genreDB[available[0]]);
+    } else {
+        script = getRandom(DB.cyberpunk['5min']);
+    }
 
-PARÁMETROS:
-- Género: ${genre}
-- Duración: ${duration}
-- Elementos: ${keywords}
-${tone ? `- Tono: ${tone}` : ''}
-
-REQUISITOS:
-1. Formato screenplay profesional (FADE IN, sluglines, action, dialogue, FADE OUT)
-2. Diálogos naturales e impactantes
-3. Acción visual clara
-4. Duración ajustada a ${duration}
-5. Profesional y vendible
-6. SIN clichés
-7. Estructura clara: Setup → Conflicto → Clímax
-8. Solo el guión, sin explicaciones
-
-Crea un guión ÚNICO y ORIGINAL.`;
-
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: prompt
-                            }]
-                        }],
-                        generationConfig: {
-                            maxOutputTokens: 3000,
-                            temperature: 0.8,
-                            topP: 0.95
-                        }
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error?.message || `Error: ${response.status}`);
-                }
-
-                const script = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                
-                if (!script) {
-                    throw new Error('No se generó contenido.');
-                }
-
-                displayScript(script);
-                showSuccess('✓ Guión generado');
-
-            } catch (error) {
-                console.error('Error:', error);
-                showError(`Error: ${error.message}`);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '✨ Generar Guión';
-            }
+    // Personalizar con palabras clave si las hay
+    if (keywords) {
+        const kws = keywords.split(',').map(k => k.trim()).filter(k => k);
+        if (kws.length > 0) {
+            script = script + `\n\n---\nElementos personalizados: ${kws.join(', ')}`;
+            if (tone) script += `\nTono: ${tone}`;
         }
+    }
 
-        function displayScript(script) {
-            const output = document.getElementById('script-output');
-            output.textContent = script;
-            
-            const wordCount = script.split(/\s+/).length;
-            document.getElementById('word-count').textContent = `${wordCount} palabras`;
-            
-            document.getElementById('action-buttons').style.display = 'flex';
-        }
+    document.getElementById('output').textContent = script;
+    const wc = script.split(/\s+/).length;
+    document.getElementById('word-count').textContent = `${wc} palabras`;
+    document.getElementById('actions').style.display = 'flex';
+}
 
-        function copyScript() {
-            const script = document.getElementById('script-output').textContent;
-            navigator.clipboard.writeText(script).then(() => {
-                showSuccess('✓ Copiado');
-            });
-        }
+function copyScript() {
+    navigator.clipboard.writeText(document.getElementById('output').textContent);
+}
 
-        function downloadScript() {
-            const script = document.getElementById('script-output').textContent;
-            const genre = document.getElementById('genre').value;
-            const timestamp = new Date().toISOString().slice(0, 10);
-            
-            const element = document.createElement('a');
-            const file = new Blob([script], { type: 'text/plain' });
-            element.href = URL.createObjectURL(file);
-            element.download = `guion-${genre}-${timestamp}.txt`;
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-            
-            showSuccess('✓ Descargado');
-        }
-
-        function showError(msg) {
-            document.getElementById('error-message').textContent = msg;
-            document.getElementById('error-message').style.display = 'block';
-        }
-
-        function hideError() {
-            document.getElementById('error-message').style.display = 'none';
-        }
-
-        function showSuccess(msg) {
-            const el = document.getElementById('success-message');
-            el.textContent = msg;
-            el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 3000);
-        }
-
-        function hideSuccess() {
-            document.getElementById('success-message').style.display = 'none';
-        }
-    </script>
+function downloadScript() {
+    const script = document.getElementById('output').textContent;
+    const genre = document.getElementById('genre').value;
+    const ts = new Date().toISOString().slice(0,10);
+    const a = document.createElement('a');
+    const f = new Blob([script], {type:'text/plain'});
+    a.href = URL.createObjectURL(f);
+    a.download = `guion-${genre}-${ts}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+</script>
 </body>
 </html>
