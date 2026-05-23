@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOIR Scripts - Guiones Sci-Fi Profesionales</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @keyframes holo-bg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes holo-border {
+            0% { border-color: rgba(220,180,255,.8); box-shadow: 0 0 20px rgba(200,150,255,.4), inset 0 0 30px rgba(255,255,255,.4); }
+            25% { border-color: rgba(180,255,220,.8); box-shadow: 0 0 20px rgba(150,255,200,.4), inset 0 0 30px rgba(255,255,255,.4); }
+            50% { border-color: rgba(255,200,240,.8); box-shadow: 0 0 20px rgba(255,170,220,.4), inset 0 0 30px rgba(255,255,255,.4); }
+            75% { border-color: rgba(200,230,255,.8); box-shadow: 0 0 20px rgba(160,210,255,.4), inset 0 0 30px rgba(255,255,255,.4); }
+            100% { border-color: rgba(220,180,255,.8); box-shadow: 0 0 20px rgba(200,150,255,.4), inset 0 0 30px rgba(255,255,255,.4); }
+        }
+
+        @keyframes holo-text {
+            0% { color: #9966cc; }
+            25% { color: #66bb99; }
+            50% { color: #cc66aa; }
+            75% { color: #6699cc; }
+            100% { color: #9966cc; }
+        }
+
+        @keyframes holo-btn {
+            0% { background: linear-gradient(135deg, rgba(190,150,255,.85), rgba(150,190,255,.85)); }
+            33% { background: linear-gradient(135deg, rgba(255,170,220,.85), rgba(190,150,255,.85)); }
+            66% { background: linear-gradient(135deg, rgba(150,230,190,.85), rgba(230,200,255,.85)); }
+            100% { background: linear-gradient(135deg, rgba(190,150,255,.85), rgba(150,190,255,.85)); }
+        }
+
+        body {
+            background: linear-gradient(120deg, #f4f0ff, #eef8ff, #eefff8, #fff0f8, #f8f0ff, #eef4ff, #f4f0ff);
+            background-size: 400% 400%;
+            animation: holo-bg 10s ease infinite;
+            min-height: 100vh;
+            padding: 2rem;
+            font-family: 'Crimson Text', serif;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 15% 15%, rgba(190,140,255,.12) 0%, transparent 45%),
+                radial-gradient(ellipse at 85% 25%, rgba(140,210,255,.12) 0%, transparent 45%),
+                radial-gradient(ellipse at 50% 85%, rgba(140,255,190,.10) 0%, transparent 45%),
+                radial-gradient(ellipse at 80% 85%, rgba(255,170,210,.10) 0%, transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid;
+            animation: holo-border 6s linear infinite;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            animation: holo-text 6s linear infinite;
+            margin-bottom: .5rem;
+        }
+
+        .tagline {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-size: .85rem;
+            animation: holo-text 6s linear infinite;
+            opacity: .75;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .price-card {
+            background: linear-gradient(145deg, rgba(255,255,255,.88), rgba(248,242,255,.80), rgba(255,250,255,.88));
+            border: 1.5px solid;
+            padding: 2rem;
+            border-radius: 20px;
+            animation: holo-border 6s linear infinite;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 40px rgba(170,130,255,.10), 0 2px 12px rgba(255,170,210,.08), inset 0 1px 0 rgba(255,255,255,.95);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+            animation: shine 5s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        .price-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            animation: holo-text 6s linear infinite;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .price-amount {
+            font-size: 2.5rem;
+            font-weight: 900;
+            animation: holo-text 6s linear infinite;
+            margin-bottom: .5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .price-desc {
+            font-size: .9rem;
+            color: #999;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .price-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+            font-size: .95rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .price-features li {
+            padding: .5rem 0;
+            border-bottom: 1px solid rgba(200,150,255,.2);
+        }
+
+        .price-features li:last-child {
+            border-bottom: none;
+        }
+
+        .btn-buy {
+            width: 100%;
+            padding: .9rem;
+            color: rgba(50,30,70,.9);
+            border: 1.5px solid rgba(190,150,255,.6);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            border-radius: 12px;
+            animation: holo-btn 6s linear infinite;
+            transition: transform .2s, box-shadow .2s;
+            box-shadow: 0 4px 20px rgba(170,130,255,.2);
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-buy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(170,130,255,.35);
+        }
+
+        .btn-buy:active {
+            transform: translateY(0);
+        }
+
+        .features-section {
+            background: linear-gradient(145deg, rgba(255,255,255,.88), rgba(248,242,255,.80));
+            border: 1.5px solid;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            animation: holo-border 6s linear infinite;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(20px);
+        }
+
+        .features-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            animation: holo-text 6s linear infinite;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-name {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            animation: holo-text 6s linear infinite;
+            margin-bottom: .5rem;
+        }
+
+        .feature-desc {
+            font-size: .9rem;
+            color: #666;
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(200,150,255,.3);
+            color: #666;
+            font-size: .85rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">⚡ NOIR</div>
+        <div class="tagline">Scripts Sci-Fi Profesionales</div>
+        <div class="subtitle">54 guiones listos para producir. Descarga y empieza a rodar.</div>
+    </div>
+
+    <div class="features-section">
+        <div class="features-title">¿Qué incluye?</div>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">📝</div>
+                <div class="feature-name">Guiones Profesionales</div>
+                <div class="feature-desc">Formato screenplay real. Listos para producir.</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🎬</div>
+                <div class="feature-name">8 Géneros Sci-Fi</div>
+                <div class="feature-desc">Cyberpunk, Space Opera, Distópico, Post-Humano y más.</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⏱️</div>
+                <div class="feature-name">4 Duraciones</div>
+                <div class="feature-desc">De 3 a 15 minutos. Elige lo que necesitas.</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✨</div>
+                <div class="feature-name">Calidad Premium</div>
+                <div class="feature-desc">Diálogos pulidos. Narrativa cinematográfica.</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📥</div>
+                <div class="feature-name">Descarga Inmediata</div>
+                <div class="feature-desc">Sin esperas. Acceso instantáneo a tus guiones.</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🎞️</div>
+                <div class="feature-name">Listo para CapCut</div>
+                <div class="feature-desc">Integración directa para generar videos.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pricing-grid">
+        <div class="price-card">
+            <div class="price-title">Starter</div>
+            <div class="price-amount">$250</div>
+            <div class="price-desc">1 Guión completo</div>
+            <ul class="price-features">
+                <li>✓ 1 guión profesional</li>
+                <li>✓ Género a elegir</li>
+                <li>✓ Duración 3-15 min</li>
+                <li>✓ Formato screenplay</li>
+                <li>✓ Descarga inmediata</li>
+            </ul>
+            <a href="https://buy.stripe.com/14AdR849D51r6fCdNB8og01" class="btn-buy" target="_blank">Comprar Ahora</a>
+        </div>
+
+        <div class="price-card">
+            <div class="price-title">Pack</div>
+            <div class="price-amount">$600</div>
+            <div class="price-desc">3 Guiones variados</div>
+            <ul class="price-features">
+                <li>✓ 3 guiones profesionales</li>
+                <li>✓ Géneros variados</li>
+                <li>✓ Mix de duraciones</li>
+                <li>✓ Acceso a banco</li>
+                <li>✓ Descarga inmediata</li>
+            </ul>
+            <a href="https://buy.stripe.com/5kQbJ0ay179zavSgZN8og02" class="btn-buy" target="_blank">Comprar Ahora</a>
+        </div>
+
+        <div class="price-card">
+            <div class="price-title">Studio</div>
+            <div class="price-amount">$1,000</div>
+            <div class="price-desc">6 Guiones + Exclusividad</div>
+            <ul class="price-features">
+                <li>✓ 6 guiones profesionales</li>
+                <li>✓ Todos los géneros</li>
+                <li>✓ Todas las duraciones</li>
+                <li>✓ Derechos exclusivos</li>
+                <li>✓ Soporte prioritario</li>
+            </ul>
+            <a href="https://buy.stripe.com/8x27sK21v2Tj9rO4d18og03" class="btn-buy" target="_blank">Comprar Ahora</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 NOIR Scripts. Todos los derechos reservados.</p>
+        <p>Precios en USD. Pago seguro con Stripe.</p>
+    </div>
+</div>
+</body>
+</html>
