@@ -7,33 +7,211 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--dark:#0a0e27;--darker:#05070f;--accent:#00ff41;--alt:#ff006e;--text:#e0e0e0;--muted:#8b8b8b}
-        body{background:linear-gradient(135deg,var(--darker) 0%,#1a0033 50%,var(--dark) 100%);color:var(--text);font-family:'Crimson Text',serif;min-height:100vh;padding:2rem}
-        .container{max-width:1200px;margin:0 auto}
-        .header{text-align:center;margin-bottom:3rem;border-bottom:2px solid var(--accent);padding-bottom:2rem}
-        .logo{font-family:'Orbitron',sans-serif;font-size:2.5rem;font-weight:900;letter-spacing:4px;color:var(--accent);text-shadow:0 0 20px var(--alt);text-transform:uppercase}
-        .tagline{color:var(--muted);font-family:'Orbitron',sans-serif;letter-spacing:2px;text-transform:uppercase;font-size:.9rem}
-        .grid{display:grid;grid-template-columns:350px 1fr;gap:2rem}
-        @media(max-width:768px){.grid{grid-template-columns:1fr}}
-        .card{background:rgba(255,255,255,.03);border:1px solid var(--accent);padding:2rem;border-radius:2px}
-        .card-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--accent);margin-bottom:1.5rem;text-transform:uppercase}
-        .form-group{margin-bottom:1.5rem}
-        .form-group label{display:block;font-family:'Orbitron',sans-serif;color:var(--alt);font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem}
-        select,textarea{width:100%;padding:.75rem;background:rgba(0,0,0,.4);border:1px solid var(--accent);color:var(--text);font-family:'Crimson Text',serif;font-size:.95rem;border-radius:2px;transition:all .3s}
-        select:focus,textarea:focus{outline:none;border-color:var(--alt);box-shadow:0 0 15px var(--alt)}
-        textarea{min-height:100px;resize:vertical}
-        .btn{width:100%;padding:1rem;background:var(--accent);color:var(--darker);border:2px solid var(--accent);font-family:'Orbitron',sans-serif;font-weight:700;text-transform:uppercase;cursor:pointer;font-size:.95rem;letter-spacing:1px;transition:all .3s;border-radius:2px}
-        .btn:hover{background:var(--alt);border-color:var(--alt);box-shadow:0 0 20px var(--alt);transform:scale(1.02)}
-        .script-out{background:rgba(0,0,0,.5);border:1px solid var(--accent);padding:1.5rem;border-radius:2px;max-height:520px;overflow-y:auto;font-family:'Monaco',monospace;font-size:.85rem;line-height:1.6;white-space:pre-wrap;word-break:break-word}
-        .placeholder{text-align:center;color:var(--muted);padding:4rem 1rem}
-        .actions{display:flex;gap:1rem;margin-top:1rem}
-        .btn-sec{flex:1;padding:.75rem;background:transparent;border:1px solid var(--accent);color:var(--accent);font-family:'Orbitron',sans-serif;font-weight:600;text-transform:uppercase;cursor:pointer;font-size:.85rem;border-radius:2px;transition:all .3s}
-        .btn-sec:hover{background:var(--accent);color:var(--darker)}
-        .badge{display:inline-block;padding:.25rem .75rem;background:rgba(71,85,105,.2);border:1px solid rgba(71,85,105,.5);border-radius:999px;font-size:.75rem;color:var(--muted)}
-        .footer{text-align:center;margin-top:2rem}
-        ::-webkit-scrollbar{width:8px}
-        ::-webkit-scrollbar-track{background:rgba(0,0,0,.3)}
-        ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
+
+        @keyframes iris {
+            0%   { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        @keyframes iris-border {
+            0%   { border-color: #ff006e; box-shadow: 0 0 12px #ff006e; }
+            16%  { border-color: #ff6600; box-shadow: 0 0 12px #ff6600; }
+            33%  { border-color: #ffee00; box-shadow: 0 0 12px #ffee00; }
+            50%  { border-color: #00ff88; box-shadow: 0 0 12px #00ff88; }
+            66%  { border-color: #00ccff; box-shadow: 0 0 12px #00ccff; }
+            83%  { border-color: #aa00ff; box-shadow: 0 0 12px #aa00ff; }
+            100% { border-color: #ff006e; box-shadow: 0 0 12px #ff006e; }
+        }
+
+        @keyframes iris-text {
+            0%   { color: #ff006e; }
+            16%  { color: #ff6600; }
+            33%  { color: #ddaa00; }
+            50%  { color: #00bb66; }
+            66%  { color: #0099cc; }
+            83%  { color: #8800cc; }
+            100% { color: #ff006e; }
+        }
+
+        @keyframes iris-bg {
+            0%   { background: linear-gradient(135deg,#fff0f8,#fff8f0,#fffff0); }
+            25%  { background: linear-gradient(135deg,#f0fff8,#f0f8ff,#f8f0ff); }
+            50%  { background: linear-gradient(135deg,#f0f8ff,#fff0ff,#f0ffff); }
+            75%  { background: linear-gradient(135deg,#fff8f0,#f0fff0,#f8f0ff); }
+            100% { background: linear-gradient(135deg,#fff0f8,#fff8f0,#fffff0); }
+        }
+
+        @keyframes iris-btn {
+            0%   { background: #ff006e; border-color: #ff006e; }
+            16%  { background: #ff6600; border-color: #ff6600; }
+            33%  { background: #ccaa00; border-color: #ccaa00; }
+            50%  { background: #00aa55; border-color: #00aa55; }
+            66%  { background: #0088bb; border-color: #0088bb; }
+            83%  { background: #7700bb; border-color: #7700bb; }
+            100% { background: #ff006e; border-color: #ff006e; }
+        }
+
+        body {
+            background: #ffffff;
+            animation: iris-bg 6s ease-in-out infinite;
+            color: #1a1a1a;
+            font-family: 'Crimson Text', serif;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 3px solid;
+            animation: iris-border 4s linear infinite;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: iris-text 4s linear infinite;
+        }
+
+        .tagline {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: .9rem;
+            animation: iris-text 4s linear infinite;
+            opacity: 0.7;
+        }
+
+        .grid { display: grid; grid-template-columns: 350px 1fr; gap: 2rem; }
+        @media(max-width:768px) { .grid { grid-template-columns: 1fr; } }
+
+        .card {
+            background: rgba(255,255,255,0.85);
+            border: 2px solid;
+            padding: 2rem;
+            border-radius: 12px;
+            animation: iris-border 4s linear infinite;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            animation: iris-text 4s linear infinite;
+        }
+
+        .form-group { margin-bottom: 1.5rem; }
+
+        .form-group label {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: .85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: .5rem;
+            animation: iris-text 4s linear infinite;
+            font-weight: 700;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: .75rem;
+            background: rgba(255,255,255,0.9);
+            border: 2px solid;
+            color: #1a1a1a;
+            font-family: 'Crimson Text', serif;
+            font-size: .95rem;
+            border-radius: 8px;
+            transition: all .3s;
+            animation: iris-border 4s linear infinite;
+        }
+
+        select:focus, textarea:focus {
+            outline: none;
+            background: #ffffff;
+        }
+
+        textarea { min-height: 100px; resize: vertical; }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            color: #ffffff;
+            border: 2px solid;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: .95rem;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            animation: iris-btn 4s linear infinite;
+            transition: transform .2s;
+        }
+
+        .btn:hover { transform: scale(1.02); opacity: 0.9; }
+
+        .script-out {
+            background: rgba(255,255,255,0.9);
+            border: 2px solid;
+            padding: 1.5rem;
+            border-radius: 8px;
+            max-height: 520px;
+            overflow-y: auto;
+            font-family: 'Monaco', monospace;
+            font-size: .85rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #1a1a1a;
+            animation: iris-border 4s linear infinite;
+        }
+
+        .placeholder { text-align: center; color: #999; padding: 4rem 1rem; }
+
+        .actions { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+
+        .btn-sec {
+            flex: 1;
+            padding: .75rem;
+            background: transparent;
+            border: 2px solid;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: .8rem;
+            border-radius: 8px;
+            animation: iris-border 4s linear infinite, iris-text 4s linear infinite;
+            transition: all .3s;
+        }
+
+        .btn-sec:hover { color: #fff; animation: iris-btn 4s linear infinite; }
+
+        .badge {
+            display: inline-block;
+            padding: .25rem .75rem;
+            border: 1px solid;
+            border-radius: 999px;
+            font-size: .75rem;
+            animation: iris-border 4s linear infinite, iris-text 4s linear infinite;
+        }
+
+        .footer { text-align: center; margin-top: 2rem; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,.05); }
+        ::-webkit-scrollbar-thumb { border-radius: 4px; animation: iris-bg 4s linear infinite; background: #ff006e; }
     </style>
 </head>
 <body>
