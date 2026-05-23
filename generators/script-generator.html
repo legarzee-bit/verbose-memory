@@ -86,6 +86,7 @@
             <div id="actions" class="actions" style="display:none">
                 <button class="btn-sec" onclick="copyScript()">📋 Copiar</button>
                 <button class="btn-sec" onclick="downloadScript()">⬇️ Descargar</button>
+                <button class="btn-sec" onclick="openCapCut()" style="border-color:#ff006e;color:#ff006e">🎬 Abrir en CapCut</button>
             </div>
         </div>
     </div>
@@ -256,6 +257,16 @@ function generate() {
 
 function copyScript() {
     navigator.clipboard.writeText(document.getElementById('output').textContent);
+}
+
+function openCapCut() {
+    const script = document.getElementById('output').textContent;
+    navigator.clipboard.writeText(script).then(() => {
+        alert('✅ Guión copiado al portapapeles.\n\nCapCut se abrirá ahora. Pega el guión en la sección de texto o script.');
+        window.open('https://www.capcut.com', '_blank');
+    }).catch(() => {
+        window.open('https://www.capcut.com', '_blank');
+    });
 }
 
 function downloadScript() {
