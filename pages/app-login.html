@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOIR Scripts - Acceso</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -84,8 +84,7 @@
             width: 100%;
             padding: .75rem 1rem;
             background: rgba(255,255,255,.8);
-            border: 1.5px solid;
-            animation: holo-border 6s linear infinite;
+            border: 1.5px solid rgba(200,150,255,.5);
             border-radius: 10px;
             font-family: 'Crimson Text', serif;
             font-size: 1rem;
@@ -96,6 +95,7 @@
         input:focus {
             outline: none;
             background: rgba(255,255,255,.95);
+            border-color: rgba(190,150,255,.8);
         }
 
         .btn {
@@ -119,6 +119,11 @@
             transform: translateY(-2px);
         }
 
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .toggle-form {
             text-align: center;
             margin-top: 1rem;
@@ -136,21 +141,38 @@
             color: #d32f2f;
             font-size: .85rem;
             margin-top: .5rem;
+            padding: .5rem;
+            background: rgba(211,47,47,.1);
+            border-radius: 4px;
         }
 
         .success {
             color: #388e3c;
             font-size: .85rem;
             margin-top: .5rem;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
+            padding: .5rem;
+            background: rgba(56,142,60,.1);
+            border-radius: 4px;
         }
 
         .hidden {
             display: none;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(50,30,70,.3);
+            border-top: 2px solid rgba(50,30,70,.9);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -170,8 +192,8 @@
                 <label>Contraseña</label>
                 <input type="password" id="login-password" placeholder="••••••••">
             </div>
-            <button class="btn" onclick="loginUser()">Acceder</button>
-            <div id="login-error" class="error"></div>
+            <button class="btn" id="login-btn" onclick="loginUser()">Acceder</button>
+            <div id="login-error" class="error" style="display:none"></div>
             <div class="toggle-form">
                 ¿Sin cuenta? <a onclick="toggleForm()">Crear una</a>
             </div>
@@ -192,16 +214,12 @@
                 <label>Confirmar</label>
                 <input type="password" id="signup-confirm" placeholder="••••••••">
             </div>
-            <button class="btn" onclick="signupUser()">Crear Cuenta</button>
-            <div id="signup-error" class="error"></div>
-            <div id="signup-success" class="success"></div>
+            <button class="btn" id="signup-btn" onclick="signupUser()">Crear Cuenta</button>
+            <div id="signup-error" class="error" style="display:none"></div>
+            <div id="signup-success" class="success" style="display:none"></div>
             <div class="toggle-form">
                 ¿Ya tienes cuenta? <a onclick="toggleForm()">Acceder</a>
             </div>
-        </div>
-
-        <div id="loading" class="loading">
-            <p>Procesando...</p>
         </div>
     </div>
 </div>
@@ -218,7 +236,7 @@ const firebaseConfig = {
   measurementId: "G-V2G8TQDC0Y"
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
@@ -228,50 +246,73 @@ function toggleForm() {
 }
 
 function loginUser() {
-    const email = document.getElementById('login-email').value;
+    const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value;
-    const error = document.getElementById('login-error');
+    const errorDiv = document.getElementById('login-error');
+    const btn = document.getElementById('login-btn');
 
-    error.textContent = '';
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
 
     if (!email || !password) {
-        error.textContent = 'Completa todos los campos';
+        errorDiv.textContent = 'Completa todos los campos';
+        errorDiv.style.display = 'block';
         return;
     }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Accediendo...';
 
     auth.signInWithEmailAndPassword(email, password)
         .then(user => {
             window.location.href = 'dashboard.html';
         })
         .catch(err => {
-            error.textContent = 'Email o contraseña incorrectos';
+            let msg = 'Error al acceder';
+            if (err.code === 'auth/user-not-found') msg = 'Email no registrado';
+            if (err.code === 'auth/wrong-password') msg = 'Contraseña incorrecta';
+            if (err.code === 'auth/invalid-email') msg = 'Email inválido';
+            
+            errorDiv.textContent = msg;
+            errorDiv.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = 'Acceder';
         });
 }
 
 function signupUser() {
-    const email = document.getElementById('signup-email').value;
+    const email = document.getElementById('signup-email').value.trim();
     const password = document.getElementById('signup-password').value;
     const confirm = document.getElementById('signup-confirm').value;
-    const error = document.getElementById('signup-error');
-    const success = document.getElementById('signup-success');
+    const errorDiv = document.getElementById('signup-error');
+    const successDiv = document.getElementById('signup-success');
+    const btn = document.getElementById('signup-btn');
 
-    error.textContent = '';
-    success.textContent = '';
+    errorDiv.style.display = 'none';
+    successDiv.style.display = 'none';
+    errorDiv.textContent = '';
+    successDiv.textContent = '';
 
     if (!email || !password || !confirm) {
-        error.textContent = 'Completa todos los campos';
+        errorDiv.textContent = 'Completa todos los campos';
+        errorDiv.style.display = 'block';
         return;
     }
 
     if (password !== confirm) {
-        error.textContent = 'Las contraseñas no coinciden';
+        errorDiv.textContent = 'Las contraseñas no coinciden';
+        errorDiv.style.display = 'block';
         return;
     }
 
     if (password.length < 6) {
-        error.textContent = 'Mínimo 6 caracteres';
+        errorDiv.textContent = 'Mínimo 6 caracteres';
+        errorDiv.style.display = 'block';
         return;
     }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Creando cuenta...';
 
     auth.createUserWithEmailAndPassword(email, password)
         .then(user => {
@@ -279,18 +320,32 @@ function signupUser() {
                 email: email,
                 createdAt: new Date().toISOString(),
                 guiones: {}
+            }, (err) => {
+                if (err) {
+                    errorDiv.textContent = 'Error al guardar perfil';
+                    errorDiv.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = 'Crear Cuenta';
+                    return;
+                }
+                
+                successDiv.textContent = '✓ Cuenta creada. Redirigiendo...';
+                successDiv.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
             });
-            success.textContent = '✓ Cuenta creada. Accediendo...';
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1500);
         })
         .catch(err => {
-            if (err.code === 'auth/email-already-in-use') {
-                error.textContent = 'Este email ya está registrado';
-            } else {
-                error.textContent = err.message;
-            }
+            let msg = 'Error al crear cuenta';
+            if (err.code === 'auth/email-already-in-use') msg = 'Este email ya está registrado';
+            if (err.code === 'auth/invalid-email') msg = 'Email inválido';
+            if (err.code === 'auth/weak-password') msg = 'Contraseña muy débil';
+            
+            errorDiv.textContent = msg;
+            errorDiv.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = 'Crear Cuenta';
         });
 }
 
